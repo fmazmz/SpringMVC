@@ -4,12 +4,24 @@ server:
 spring:
   application:
     name: SpringMVCApplication
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/mvc_db
     username: root
     password: root
+
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
