@@ -24,3 +24,9 @@ VALUES (gen_random_uuid(), 'Volvo', 'XC90', 2026);
 
 INSERT INTO car (id, make, model, year)
 VALUES (gen_random_uuid(), 'Volvo', 'EX90', 2025);
+
+INSERT INTO car (id, make, model, year)
+VALUES (gen_random_uuid(), 'Volvo', 'V60', 2025);
+
+INSERT INTO car (id, make, model, year)
+VALUES (gen_random_uuid(), 'Volvo', 'V90', 2025);

@@ -38,7 +38,7 @@
         </thead>
         <tbody>
 
-        <tr th:each="c : ${cars}">
+        <tr th:each="c : ${cars.content}">
             <td th:text="${c.make}">Make</td>
             <td th:text="${c.model}">Model</td>
             <td th:text="${c.year}">Year</td>
@@ -46,6 +46,28 @@
 
         </tbody>
     </table>
+</div>
+<div style="margin-top:20px; text-align:center;">
+
+    <a th:if="${cars.hasPrevious()}"
+       th:href="${make != null and !make.isEmpty()} ?
+                 @{/cars(page=${cars.number-1}, make=${make})} :
+                 @{/cars(page=${cars.number-1})}">
+        Previous
+    </a>
+
+    <span>
+        Page <span th:text="${cars.number + 1}"></span>
+        of <span th:text="${cars.totalPages}"></span>
+    </span>
+
+    <a th:if="${cars.hasNext()}"
+       th:href="${make != null and !make.isEmpty()} ?
+                 @{/cars(page=${cars.number+1}, make=${make})} :
+                 @{/cars(page=${cars.number+1})}">
+        Next
+    </a>
+
 </div>
 </body>
 </html>
