@@ -28,6 +28,8 @@ public class Car {
     private String make;
     @NotBlank
     private String model;
+
+    @Min(value = 1800)
     @PastOrPresent
     private Year year;
 
