@@ -19,7 +19,8 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
+      data-locations: classpath:/data/*.sql
 
   devtools:
     restart:
