@@ -32,9 +32,6 @@
                 Model
             </th>
             <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
-                Mileage
-            </th>
-            <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
                 Hourly Price
             </th>
             <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
@@ -53,7 +50,6 @@
         <tr th:each="c : ${cars.content}">
             <td th:text="${c.make}">Make</td>
             <td th:text="${c.model}">Model</td>
-            <td th:text="${c.mileage}">Mileage</td>
             <td th:text="${c.hourlyPrice}">Hourly Price</td>
             <td th:text="${c.licencePlate}">Licence Plate</td>
             <td th:text="${c.vin}">VIN</td>

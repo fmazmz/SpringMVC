@@ -11,7 +11,6 @@ public class CarMapper {
                 car.getId(),
                 car.getMake(),
                 car.getModel(),
-                car.getMileage(),
                 car.getHourlyPrice(),
                 car.getLicencePlate(),
                 car.getVin(),
@@ -23,7 +22,6 @@ public class CarMapper {
         return new Car(
                 dto.make(),
                 dto.model(),
-                dto.mileage(),
                 dto.hourlyPrice(),
                 dto.licencePlate(),
                 dto.vin(),

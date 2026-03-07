@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.springmvc.drivers.Driver;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -27,12 +28,8 @@ public class Car {
     @NotBlank
     private String model;
 
-    @NotBlank
-    @Min(value = 0)
-    private int mileage;
-
-    @NotBlank
-    @Min(value = 0)
+    @NotNull
+    @DecimalMin(value = "0", inclusive = true)
     private BigDecimal hourlyPrice;
 
     @NotBlank
@@ -44,15 +41,18 @@ public class Car {
     @PastOrPresent
     private Year year;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id", nullable = true)
+    private Driver driver;
+
     @CreationTimestamp
     private Instant createdAt;
     @UpdateTimestamp
     private Instant updatedAt;
 
-    public Car(String make, String model, int mileage, BigDecimal hourlyPrice, String licencePlate, String vin, Year year) {
+    public Car(String make, String model, BigDecimal hourlyPrice, String licencePlate, String vin, Year year) {
         this.make = make;
         this.model = model;
-        this.mileage = mileage;
         this.hourlyPrice = hourlyPrice;
         this.licencePlate = licencePlate;
         this.vin = vin;

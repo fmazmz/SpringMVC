@@ -8,7 +8,6 @@ public record CarDTO(
         UUID id,
         String make,
         String model,
-        int mileage,
         BigDecimal hourlyPrice,
         String licencePlate,
         String vin,
