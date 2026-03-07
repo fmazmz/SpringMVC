@@ -38,4 +38,11 @@ public class Driver {
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
     private List<Car> cars = new ArrayList<>();
+
+    public Driver(String email, String fname, String lname, String ssn) {
+        this.email = email;
+        this.fname = fname;
+        this.lname = lname;
+        this.ssn = ssn;
+    }
 }
