@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Something went wrong</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/error/css/particles.css}" />
+</head>
+
+<body class="permission_denied">
+<div id="tsparticles"></div>
+<div class="denied__wrapper">
+    <h1>Whoops...</h1>
+    <h3>
+        Hmm, looks like something went wrong
+    </h3>
+    <img id="astronaut" th:src="@{/error/images/astronaut.svg}" alt=""/>
+    <img id="planet" th:src="@{/error/images/planet.svg}" alt=""/>
+    <a th:href="@{/static}"><button class="denied__link">Go Home</button></a>
+</div>
+
+<script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"
+></script>
+<script type="text/javascript" th:src="@{/error/js/particles.js}"></script>
+</body>
+</html>
