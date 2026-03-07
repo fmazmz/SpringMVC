@@ -4,6 +4,8 @@ import org.example.springmvc.domain.drivers.model.dto.CreateDriverDTO;
 import org.example.springmvc.domain.drivers.model.Driver;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DriverService {
     private final DriverRepository repository;
@@ -15,5 +17,9 @@ public class DriverService {
     public void create(CreateDriverDTO dto) {
         Driver driver = DriverMapper.fromDto(dto);
         repository.save(driver);
+    }
+
+    public List<Driver> getAll() {
+        return repository.findAll();
     }
 }
