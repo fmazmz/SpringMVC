@@ -34,11 +34,14 @@ public class Car {
 
     @NotBlank
     @Column(unique = true)
+    @Size(min = 6, max = 6)
     private String licencePlate;
+
     @NotBlank
     @Column(unique = true)
     private String vin;
 
+    @NotNull
     @PastOrPresent
     private Year year;
 

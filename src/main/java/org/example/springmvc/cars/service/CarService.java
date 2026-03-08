@@ -28,6 +28,14 @@ public class CarService {
     }
 
     public void create(CreateCarDTO dto) {
+        if (repository.findByLicencePlateIgnoreCase(dto.licencePlate().trim()).isPresent()) {
+            throw new IllegalArgumentException("A car with license plate '" + dto.licencePlate() + "' already exists.");
+        }
+
+        if (repository.findByVinIgnoreCase(dto.vin().trim()).isPresent()) {
+            throw new IllegalArgumentException("A car with VIN '" + dto.vin() + "' already exists.");
+        }
+
         Car car = CarMapper.fromDto(dto);
         repository.save(car);
     }
