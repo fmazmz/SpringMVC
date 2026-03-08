@@ -1,4 +1,4 @@
-package org.example.springmvc.booking.dto;
+package org.example.springmvc.bookings.dto;
 
 import org.example.springmvc.insurances.InsuranceType;
 

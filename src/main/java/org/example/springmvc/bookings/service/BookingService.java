@@ -1,8 +1,8 @@
-package org.example.springmvc.booking.service;
+package org.example.springmvc.bookings.service;
 
-import org.example.springmvc.booking.repository.BookingRepository;
-import org.example.springmvc.booking.dto.CreateBookingDTO;
-import org.example.springmvc.booking.model.Booking;
+import org.example.springmvc.bookings.repository.BookingRepository;
+import org.example.springmvc.bookings.dto.CreateBookingDTO;
+import org.example.springmvc.bookings.model.Booking;
 import org.example.springmvc.cars.repository.CarRepository;
 import org.example.springmvc.cars.model.Car;
 import org.example.springmvc.drivers.repository.DriverRepository;

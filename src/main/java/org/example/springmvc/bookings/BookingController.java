@@ -1,7 +1,7 @@
-package org.example.springmvc.booking;
+package org.example.springmvc.bookings;
 
-import org.example.springmvc.booking.dto.CreateBookingDTO;
-import org.example.springmvc.booking.service.BookingService;
+import org.example.springmvc.bookings.dto.CreateBookingDTO;
+import org.example.springmvc.bookings.service.BookingService;
 import org.example.springmvc.cars.service.CarService;
 import org.example.springmvc.drivers.service.DriverService;
 import org.example.springmvc.drivers.model.Driver;

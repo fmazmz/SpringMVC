@@ -1,4 +1,4 @@
-package org.example.springmvc.booking.model;
+package org.example.springmvc.bookings.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

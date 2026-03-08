@@ -1,6 +1,6 @@
-package org.example.springmvc.booking.repository;
+package org.example.springmvc.bookings.repository;
 
-import org.example.springmvc.booking.model.Booking;
+import org.example.springmvc.bookings.model.Booking;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
