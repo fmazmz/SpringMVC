@@ -28,6 +28,6 @@ public class DriverController {
         Page<DriverDTO> drivers = driverService.getAllPageable(pageable);
         model.addAttribute("drivers", drivers);
 
-        return "drivers/list-drivers";
+        return "drivers/list";
     }
 }

@@ -35,13 +35,13 @@ public class CarController {
 
         model.addAttribute("cars", cars);
         model.addAttribute("make", make);
-        return "cars/list-cars";
+        return "cars/list";
     }
 
     @GetMapping("new")
     public String getCreationForm(Model model) {
         model.addAttribute("car", new CreateCarDTO(null, null, null, null, null, null));
-        return "cars/create-car";
+        return "cars/create";
     }
 
     @PostMapping
@@ -51,7 +51,7 @@ public class CarController {
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            return "cars/create-car";
+            return "cars/create";
         }
 
         carService.create(car);

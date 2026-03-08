@@ -58,7 +58,7 @@ public class BookingController {
         model.addAttribute("cars", carService.getAll(Pageable.unpaged()).getContent());
         model.addAttribute("insuranceTypes", InsuranceType.values());
 
-        return "bookings/create-booking";
+        return "bookings/create";
     }
 
     @PostMapping
