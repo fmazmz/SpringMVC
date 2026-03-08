@@ -41,8 +41,6 @@ public class BookingController {
             model.addAttribute("error", "No drivers found. Please add a driver first.");
         }
 
-
-
         CreateBookingDTO bookingDTO = new CreateBookingDTO(
                 null,
                 null,

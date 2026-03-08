@@ -33,8 +33,15 @@ public class BookingService {
     }
 
     public void create(CreateBookingDTO dto) {
-        Car car = carRepository.findById(dto.carId()).orElseThrow();
-        Driver driver = driverRepository.findById(dto.driverId()).orElseThrow();
+        Car car = carRepository.findById(dto.carId())
+                .orElseThrow(() -> new IllegalArgumentException("Car with id '" + dto.carId() + "' not found."));
+
+        Driver driver = driverRepository.findById(dto.driverId())
+                .orElseThrow(() -> new IllegalArgumentException("Driver with id '" + dto.driverId() + "' not found."));
+
+        if (dto.startTime().isAfter(dto.endTime()) || dto.startTime().equals(dto.endTime())) {
+            throw new IllegalArgumentException("Start time must be before end time.");
+        }
 
         long hours = Duration.between(dto.startTime(), dto.endTime()).toHours();
 
