@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -46,6 +47,10 @@ public class BookingService {
 
         if (dto.startTime().isAfter(dto.endTime()) || dto.startTime().equals(dto.endTime())) {
             throw new IllegalArgumentException("Start time must be before end time.");
+        }
+
+        if (repository.existsOverlappingBooking(car.getId(), dto.startTime(), dto.endTime())) {
+            throw new IllegalArgumentException("Car already booked for that time.");
         }
 
         long hours = Duration.between(dto.startTime(), dto.endTime()).toHours();
