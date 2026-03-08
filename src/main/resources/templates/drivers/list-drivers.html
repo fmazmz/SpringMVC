@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Drivers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+</head>
+<body>
+
+<div style="display: flex; text-align: center; align-items: center; flex-direction: column; margin-top: 0px">
+    <h2>Drivers</h2>
+</div>
+
+<div style="display: flex; text-align: center; align-items: center; flex-direction: column; margin-top: 0px">
+
+    <table style="border-collapse: collapse; border: 1px solid black; margin: 0 auto;">
+        <thead>
+        <tr>
+            <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
+                First Name
+            </th>
+            <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
+                Last Name
+            </th>
+            <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
+                Email
+            </th>
+            <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
+                SSN
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="d : ${drivers.content}">
+            <td th:text="${d.fname}">First Name</td>
+            <td th:text="${d.lname}">Last Name</td>
+            <td th:text="${d.email}">Email</td>
+            <td th:text="${d.ssn}">SSN</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div style="margin-top:20px; text-align:center;">
+
+    <a th:if="${drivers.hasPrevious()}"
+       th:href="@{/drivers(page=${drivers.number-1})}">
+        Previous
+    </a>
+
+    <span>
+        Page <span th:text="${drivers.number + 1}"></span>
+        of <span th:text="${drivers.totalPages}"></span>
+    </span>
+
+    <a th:if="${drivers.hasNext()}"
+       th:href="@{/driver(page=${drivers.number+1})}">
+        Next
+    </a>
+
+</div>
+
+<div th:if="${success}"
+     style="margin-top: 20px; text-align: center; color: green; font-weight: bold;">
+    <span th:text="${success}"></span>
+</div>
+
+</body>
+</html>

@@ -2,6 +2,9 @@ package org.example.springmvc.domain.drivers;
 
 import org.example.springmvc.domain.drivers.model.dto.CreateDriverDTO;
 import org.example.springmvc.domain.drivers.model.Driver;
+import org.example.springmvc.domain.drivers.model.dto.DriverDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,5 +24,10 @@ public class DriverService {
 
     public List<Driver> getAll() {
         return repository.findAll();
+    }
+
+    public Page<DriverDTO> getAllPageable(Pageable pageable) {
+        return repository.findAll(pageable)
+                .map(DriverMapper::toDto);
     }
 }
