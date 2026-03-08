@@ -16,22 +16,44 @@
         form {
             display: flex;
             flex-direction: column;
-            width: 300px;
+            width: 100%;
+            max-width: 500px;
         }
 
-        label {
+        .form-field {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
             margin-top: 15px;
+        }
+
+        .form-field label {
+            width: 120px;
             font-weight: bold;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .form-field-input {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         select, input {
             padding: 5px;
-            margin-top: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
 
         button {
-            margin-top: 20px;
-            padding: 10px;
+            padding: 10px 20px;
             background-color: black;
             color: white;
             border: none;
@@ -41,37 +63,84 @@
         button:hover {
             background-color: #333;
         }
+
+        .field-error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 3px;
+        }
     </style>
 </head>
 <body>
+<div th:if="${error}" class="error-message" th:text="${error}">
+</div>
 <div class="form-container">
     <h2>Book a Car</h2>
 
     <form th:action="@{/bookings}" th:object="${booking}" method="post">
 
-        <label for="car">Select Car:</label>
-        <select id="car" th:field="*{carId}">
-            <option th:each="car : ${cars}"
-                    th:value="${car.id}"
-                    th:text="${car.make + ' ' + car.model}">
-            </option>
-        </select>
+        <div class="form-field">
+            <label for="driver">Driver</label>
+            <div class="form-field-input">
+                <select id="driver" th:field="*{driverId}">
+                    <option value="">Select driver</option>
+                    <option th:each="driver : ${drivers}"
+                            th:value="${driver.id}"
+                            th:text="${driver.fname + ' ' + driver.lname + ' - ' + driver.email}">
+                    </option>
+                </select>
+                <span class="field-error" th:errors="*{driverId}"></span>
+            </div>
+        </div>
 
-        <label for="startTime">Start Time:</label>
-        <input type="datetime-local" id="startTime" th:field="*{startTime}"/>
+        <div class="form-field">
+            <label for="car">Car</label>
+            <div class="form-field-input">
+                <select id="car" th:field="*{carId}">
+                    <option value="">Select car</option>
+                    <option th:each="car : ${cars}"
+                            th:value="${car.id}"
+                            th:text="${car.make + ' ' + car.model}">
+                    </option>
+                </select>
+                <span class="field-error" th:errors="*{carId}"></span>
+            </div>
+        </div>
 
-        <label for="endTime">End Time:</label>
-        <input type="datetime-local" id="endTime" th:field="*{endTime}"/>
+        <div class="form-field">
+            <label for="startTime">Start Time</label>
+            <div class="form-field-input">
+                <input type="datetime-local" id="startTime" th:field="*{startTime}">
+                <span class="field-error" th:errors="*{startTime}"></span>
+            </div>
+        </div>
 
-        <label for="insurance">Insurance:</label>
-        <select id="insurance" th:field="*{insuranceType}">
-            <option th:each="type : ${insuranceTypes}"
-                    th:value="${type}"
-                    th:text="${type}">
-            </option>
-        </select>
+        <div class="form-field">
+            <label for="endTime">End Time</label>
+            <div class="form-field-input">
+                <input type="datetime-local" id="endTime" th:field="*{endTime}">
+                <span class="field-error" th:errors="*{endTime}"></span>
+            </div>
+        </div>
 
-        <button type="submit">Book</button>
+        <div class="form-field">
+            <label for="insurance">Insurance</label>
+            <div class="form-field-input">
+                <select id="insurance" th:field="*{insuranceType}">
+                    <option value="">Select insurance</option>
+                    <option th:each="type : ${insuranceTypes}"
+                            th:value="${type.key}"
+                            th:text="${type.value}">
+                    </option>
+                </select>
+                <span class="field-error" th:errors="*{insuranceType}"></span>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button type="submit">Book</button>
+        </div>
+
     </form>
 </div>
 </body>

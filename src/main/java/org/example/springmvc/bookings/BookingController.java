@@ -1,18 +1,20 @@
 package org.example.springmvc.bookings;
 
+import jakarta.validation.Valid;
 import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.service.BookingService;
 import org.example.springmvc.cars.service.CarService;
 import org.example.springmvc.drivers.service.DriverService;
-import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.insurances.InsuranceType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,42 +35,59 @@ public class BookingController {
 
     @GetMapping("/new")
     public String createForm(Model model) {
-        var optionalDriver = driverService.getAll().stream().findFirst();
-        if (optionalDriver.isEmpty()) {
-            model.addAttribute("error", "No drivers found. Please add a driver first.");
-            return "error/no-drivers";
-        }
+        var drivers = driverService.getAllPageable(Pageable.unpaged()).getContent();
 
-        Driver driver = optionalDriver.get();
+        if (drivers.isEmpty()) {
+            model.addAttribute("error", "No drivers found. Please add a driver first.");
+        }
 
         CreateBookingDTO bookingDTO = new CreateBookingDTO(
                 null,
-                driver.getId(),
+                null,
                 null,
                 null,
                 null
         );
 
-        Map<InsuranceType, String> insuranceDisplayNames = new LinkedHashMap<>();
-        insuranceDisplayNames.put(InsuranceType.BASIC, "Basic");
-        insuranceDisplayNames.put(InsuranceType.PREMIUM, "Premium");
-        insuranceDisplayNames.put(InsuranceType.FULL_COVERAGE, "Full Coverage");
+        Map<InsuranceType, String> insuranceDisplayNames = Map.of(
+                InsuranceType.BASIC, "Basic",
+                InsuranceType.PREMIUM, "Premium",
+                InsuranceType.FULL_COVERAGE, "Full Coverage"
+        );
 
         model.addAttribute("booking", bookingDTO);
+        model.addAttribute("drivers", drivers);
         model.addAttribute("cars", carService.getAll(Pageable.unpaged()).getContent());
-        model.addAttribute("insuranceTypes", InsuranceType.values());
+        model.addAttribute("insuranceTypes", insuranceDisplayNames);
 
         return "bookings/create";
     }
 
     @PostMapping
-    public String create(@ModelAttribute CreateBookingDTO booking, Model model) {
-        try {
-            bookingService.create(booking);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Failed to create booking: " + e.getMessage());
-            return "error-page";
+    public String create(@Valid @ModelAttribute("booking") CreateBookingDTO booking,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes,
+                         Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("drivers",
+                    driverService.getAllPageable(Pageable.unpaged()).getContent());
+
+            model.addAttribute("cars",
+                    carService.getAll(Pageable.unpaged()).getContent());
+
+            model.addAttribute("insuranceTypes", Map.of(
+                    InsuranceType.BASIC, "Basic",
+                    InsuranceType.PREMIUM, "Premium",
+                    InsuranceType.FULL_COVERAGE, "Full Coverage"
+            ));
+
+            return "bookings/create";
         }
+
+        bookingService.create(booking);
+        redirectAttributes.addFlashAttribute("success", "Booking created successfully!");
         return "redirect:/cars";
     }
 }
