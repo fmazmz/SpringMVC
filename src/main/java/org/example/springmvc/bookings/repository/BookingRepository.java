@@ -10,5 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface BookingRepository extends ListCrudRepository<Booking, UUID> {
-    Page<Booking>findAll(Pageable pageable);
+    Page<Booking> findAll(Pageable pageable);
+    Page<Booking> findByCarId(Pageable pageable, UUID carId);
 }

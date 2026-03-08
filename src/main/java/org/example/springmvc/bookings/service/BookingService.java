@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.UUID;
 
 @Service
 public class BookingService {
@@ -68,5 +69,10 @@ public class BookingService {
 
     public Page<BookingDTO> getAll(Pageable pageable) {
         return repository.findAll(pageable).map(BookingMapper::toDto);
+    }
+
+    public Page<BookingDTO> getByCarId(Pageable pageable, UUID carId) {
+        return repository.findByCarId(pageable, carId)
+                .map(BookingMapper::toDto);
     }
 }

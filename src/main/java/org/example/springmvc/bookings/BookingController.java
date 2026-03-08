@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/bookings")
@@ -35,8 +36,13 @@ public class BookingController {
 
     @GetMapping
     public String listBookings(
-            @PageableDefault(value = 5) Pageable pageable, Model model) {
-        Page<BookingDTO> bookings = bookingService.getAll(pageable);
+            @PageableDefault(value = 5) Pageable pageable,
+            @RequestParam(required = false) UUID carId,
+            Model model) {
+        Page<BookingDTO> bookings = carId == null ?
+                bookingService.getAll(pageable) :
+                bookingService.getByCarId(pageable, carId);
+
         model.addAttribute("bookings", bookings);
         return "bookings/list";
     }
