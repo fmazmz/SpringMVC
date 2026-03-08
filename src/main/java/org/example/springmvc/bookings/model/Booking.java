@@ -8,9 +8,12 @@ import lombok.Setter;
 import org.example.springmvc.cars.model.Car;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.insurances.InsuranceType;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -35,6 +38,12 @@ public class Booking {
     private InsuranceType insuranceType;
 
     private BigDecimal totalPrice;
+
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    private Instant updatedAt;
 
     public Booking(Car car, Driver driver, Instant startTime, Instant endTime, InsuranceType insuranceType, BigDecimal totalPrice) {
         this.car = car;
