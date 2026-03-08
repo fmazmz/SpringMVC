@@ -44,10 +44,20 @@
     </style>
 </head>
 <body>
+<div th:if="${error}" class="error-message" th:text="${error}">
+</div>
 <div class="form-container">
     <h2>Book a Car</h2>
 
     <form th:action="@{/bookings}" th:object="${booking}" method="post">
+
+        <label for="driver">Select Driver:</label>
+        <select id="driver" th:field="*{driverId}">
+            <option th:each="driver : ${drivers}"
+                    th:value="${driver.id}"
+                    th:text="${driver.fname + ' ' + driver.lname + ' - ' + driver.email}">
+            </option>
+        </select>
 
         <label for="car">Select Car:</label>
         <select id="car" th:field="*{carId}">
@@ -66,8 +76,8 @@
         <label for="insurance">Insurance:</label>
         <select id="insurance" th:field="*{insuranceType}">
             <option th:each="type : ${insuranceTypes}"
-                    th:value="${type}"
-                    th:text="${type}">
+                    th:value="${type.key}"
+                    th:text="${type.value}">
             </option>
         </select>
 
