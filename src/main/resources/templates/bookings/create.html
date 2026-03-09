@@ -77,7 +77,43 @@
 <div class="form-container">
     <h2>Book a Car</h2>
 
-    <form th:action="@{/bookings}" th:object="${booking}" method="post">
+    <form th:action="@{/bookings/new}" th:object="${booking}" method="get">
+        <div class="form-field">
+            <label for="startTime">Start Time</label>
+            <div class="form-field-input">
+                <input type="datetime-local"
+                       id="startTime"
+                       name="startTime"
+                       th:value="${booking.startTime != null ? #temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
+                <span class="field-error" th:errors="*{startTime}"></span>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="endTime">End Time</label>
+            <div class="form-field-input">
+                <input type="datetime-local"
+                       id="endTime"
+                       name="endTime"
+                       th:value="${booking.endTime != null ? #temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
+                <span class="field-error" th:errors="*{endTime}"></span>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button type="submit">Find Available Cars</button>
+        </div>
+    </form>
+
+    <form th:if="${cars != null}" th:action="@{/bookings}" th:object="${booking}" method="post">
+        <input type="hidden" th:field="*{driverId}">
+        <input type="hidden"
+               name="startTime"
+               th:value="${booking.startTime != null ? #temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
+        <input type="hidden"
+               name="endTime"
+               th:value="${booking.endTime != null ? #temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
+
         <div class="form-field">
             <label for="car">Car</label>
             <div class="form-field-input">
@@ -89,22 +125,6 @@
                     </option>
                 </select>
                 <span class="field-error" th:errors="*{carId}"></span>
-            </div>
-        </div>
-
-        <div class="form-field">
-            <label for="startTime">Start Time</label>
-            <div class="form-field-input">
-                <input type="datetime-local" id="startTime" th:field="*{startTime}">
-                <span class="field-error" th:errors="*{startTime}"></span>
-            </div>
-        </div>
-
-        <div class="form-field">
-            <label for="endTime">End Time</label>
-            <div class="form-field-input">
-                <input type="datetime-local" id="endTime" th:field="*{endTime}">
-                <span class="field-error" th:errors="*{endTime}"></span>
             </div>
         </div>
 
@@ -125,8 +145,11 @@
         <div class="button-container">
             <button type="submit">Book</button>
         </div>
-
     </form>
+
+    <div th:if="${cars != null and #lists.isEmpty(cars)}" style="margin-top: 20px;">
+        No cars available for the selected time range.
+    </div>
 </div>
 </body>
 </html>

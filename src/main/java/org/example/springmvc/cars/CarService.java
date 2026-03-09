@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
+
 @Service
 public class CarService {
     private final CarRepository repository;
@@ -23,6 +26,13 @@ public class CarService {
     public Page<CarDTO> getByMake(String make, Pageable pageable) {
         return repository.findByMakeIgnoreCase(make, pageable)
                 .map(CarMapper::toDto);
+    }
+
+    public List<CarDTO> findAvailable(Instant startTime, Instant endTime) {
+        return repository.findAvailableCars(startTime, endTime)
+                .stream()
+                .map(CarMapper::toDto)
+                .toList();
     }
 
     public void create(CreateCarDTO dto) {

@@ -19,7 +19,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/signup/**", "/css/**").permitAll()
                         .requestMatchers("/cars/new").hasRole("ADMIN")
                         .requestMatchers("/drivers").hasRole("ADMIN")
-                        .requestMatchers("/bookings").hasRole("ADMIN")
+                        .requestMatchers("/bookings/list").hasRole("ADMIN")
                         .requestMatchers("/bookings/new").hasAnyRole("ADMIN", "DRIVER")
                         .requestMatchers("/cars").hasAnyRole("ADMIN", "DRIVER")
                         .anyRequest().authenticated()
