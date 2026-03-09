@@ -10,22 +10,26 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 
+
 @Service
 public class CarService {
+
     private final CarRepository repository;
 
     public CarService(CarRepository repository) {
         this.repository = repository;
     }
 
-    public Page<CarDTO> getAll(Pageable pageable) {
-        return repository.findAll(pageable)
-                .map(CarMapper::toDto);
-    }
-
-    public Page<CarDTO> getByMake(String make, Pageable pageable) {
-        return repository.findByMakeIgnoreCase(make, pageable)
-                .map(CarMapper::toDto);
+    public Page<CarDTO> search(Pageable pageable, CarFilter filter) {
+        return repository.searchCars(
+                wildcard(filter.q()),
+                wildcard(filter.make()),
+                wildcard(filter.model()),
+                filter.year(),
+                wildcard(filter.licencePlate()),
+                wildcard(filter.vin()),
+                pageable
+        ).map(CarMapper::toDto);
     }
 
     public List<CarDTO> findAvailable(Instant startTime, Instant endTime) {
@@ -36,15 +40,30 @@ public class CarService {
     }
 
     public void create(CreateCarDTO dto) {
-        if (repository.findByLicencePlateIgnoreCase(dto.licencePlate().trim()).isPresent()) {
-            throw new IllegalArgumentException("A car with license plate '" + dto.licencePlate() + "' already exists.");
+
+        String plate = dto.licencePlate().trim();
+        String vin = dto.vin().trim();
+
+        if (repository.findByLicencePlateIgnoreCase(plate).isPresent()) {
+            throw new IllegalArgumentException(
+                    "A car with license plate '" + plate + "' already exists."
+            );
         }
 
-        if (repository.findByVinIgnoreCase(dto.vin().trim()).isPresent()) {
-            throw new IllegalArgumentException("A car with VIN '" + dto.vin() + "' already exists.");
+        if (repository.findByVinIgnoreCase(vin).isPresent()) {
+            throw new IllegalArgumentException(
+                    "A car with VIN '" + vin + "' already exists."
+            );
         }
 
         Car car = CarMapper.fromDto(dto);
         repository.save(car);
+    }
+
+    private String wildcard(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return "%" + value.trim().toLowerCase() + "%";
     }
 }

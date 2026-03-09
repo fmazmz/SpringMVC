@@ -36,7 +36,6 @@ public class BookingService {
     }
 
     public Page<BookingDTO> search(Pageable pageable, BookingFilter filter) {
-
         if (filter.carId() != null) {return repository.findByCarId(pageable, filter.carId()).map(BookingMapper::toDto);}
         if (filter.driverId() != null) {return repository.findByDriverId(pageable, filter.driverId()).map(BookingMapper::toDto);}
         if (filter.insuranceType() != null) {return repository.findByInsuranceType(pageable, filter.insuranceType()).map(BookingMapper::toDto);}

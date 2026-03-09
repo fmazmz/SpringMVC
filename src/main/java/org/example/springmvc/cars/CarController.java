@@ -1,9 +1,6 @@
 package org.example.springmvc.cars;
 
-import jakarta.validation.Valid;
-import org.example.springmvc.cars.dto.CarDTO;
 import org.example.springmvc.cars.dto.CreateCarDTO;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -12,10 +9,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("cars")
 public class CarController {
+
     private final CarService carService;
 
     public CarController(CarService carService) {
@@ -24,22 +23,26 @@ public class CarController {
 
     @GetMapping
     public String listCars(
-            @PageableDefault(value = 5, sort = "year") Pageable pageable,
-            @RequestParam(required = false) String make,
-            Model model) {
+            @PageableDefault Pageable pageable,
+            @ModelAttribute CarFilter filter,
+            Model model
+    ) {
 
-        Page<CarDTO> cars = make == null
-                ? carService.getAll(pageable)
-                : carService.getByMake(make, pageable);
+        var cars = carService.search(pageable, filter);
 
         model.addAttribute("cars", cars);
-        model.addAttribute("make", make);
+        model.addAttribute("filter", filter);
+
         return "cars/list";
     }
 
-    @GetMapping("new")
+    @GetMapping("/new")
     public String getCreationForm(Model model) {
-        model.addAttribute("car", new CreateCarDTO(null, null, null, null, null, null));
+        model.addAttribute(
+                "car",
+                new CreateCarDTO(null, null, null, null, null, null)
+        );
+
         return "cars/create";
     }
 
@@ -47,14 +50,20 @@ public class CarController {
     public String createCar(
             @Valid @ModelAttribute("car") CreateCarDTO car,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
         if (bindingResult.hasErrors()) {
             return "cars/create";
         }
 
         carService.create(car);
-        redirectAttributes.addFlashAttribute("success", "Car created successfully!");
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Car created successfully!"
+        );
+
         return "redirect:/cars";
     }
 }
