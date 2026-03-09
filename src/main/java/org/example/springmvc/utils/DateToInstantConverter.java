@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Component
-public class DateToInstanstConverter implements Converter<String, Instant> {
+public class DateToInstantConverter implements Converter<String, Instant> {
     
     @Override
     public Instant convert(String source) {

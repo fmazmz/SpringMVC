@@ -21,13 +21,13 @@ public class SecurityConfig {
                         .requestMatchers("/drivers").hasRole("ADMIN")
                         .requestMatchers("/bookings/list").hasRole("ADMIN")
                         .requestMatchers("/bookings/new").hasAnyRole("ADMIN", "DRIVER")
-                        .requestMatchers("/cars").hasAnyRole("ADMIN", "DRIVER")
+                        .requestMatchers("/cars").hasAnyRole("ADMIN", "DRIVER", "APP_USER")
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
 
