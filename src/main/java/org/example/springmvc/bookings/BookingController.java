@@ -6,7 +6,10 @@ import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.model.BookingFilter;
 import org.example.springmvc.cars.CarService;
 import org.example.springmvc.drivers.DriverService;
+import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.insurances.InsuranceType;
+import org.example.springmvc.users.UserService;
+import org.example.springmvc.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.Instant;
 import java.util.Map;
 
 @Controller
@@ -25,11 +29,13 @@ public class BookingController {
     private final BookingService bookingService;
     private final CarService carService;
     private final DriverService driverService;
+    private final UserService userService;
 
-    public BookingController(BookingService bookingService, CarService carService, DriverService driverService) {
+    public BookingController(BookingService bookingService, CarService carService, DriverService driverService, UserService userService) {
         this.bookingService = bookingService;
         this.carService = carService;
         this.driverService = driverService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -41,30 +47,35 @@ public class BookingController {
     }
 
     @GetMapping("/new")
-    public String createForm(Model model) {
-        var drivers = driverService.getAllPageable(Pageable.unpaged()).getContent();
-
-        if (drivers.isEmpty()) {
-            model.addAttribute("error", "No drivers found. Please add a driver first.");
-        }
+    public String createForm(@RequestParam(required = false) Instant startTime,
+                             @RequestParam(required = false) Instant endTime,
+                             Model model) {
+        User user = userService.getCurrentUser();
+        Driver driver = user.getDriver();
 
         CreateBookingDTO bookingDTO = new CreateBookingDTO(
                 null,
-                null,
-                null,
-                null,
+                driver != null ? driver.getId() : null,
+                startTime,
+                endTime,
                 null
         );
 
-        Map<InsuranceType, String> insuranceDisplayNames = Map.of(
-                InsuranceType.BASIC, "Basic",
-                InsuranceType.PREMIUM, "Premium",
-                InsuranceType.FULL_COVERAGE, "Full Coverage"
-        );
-
         model.addAttribute("booking", bookingDTO);
-        model.addAttribute("drivers", drivers);
-        model.addAttribute("insuranceTypes", insuranceDisplayNames);
+        model.addAttribute("insuranceTypes", insuranceDisplayNames());
+
+        if (driver == null) {
+            model.addAttribute("error", "You must become a driver first.");
+            return "bookings/create";
+        }
+
+        if (startTime != null && endTime != null) {
+            if (!startTime.isBefore(endTime)) {
+                model.addAttribute("error", "Start time must be before end time.");
+            } else {
+                model.addAttribute("cars", carService.findAvailable(startTime, endTime));
+            }
+        }
 
         return "bookings/create";
     }
@@ -76,21 +87,24 @@ public class BookingController {
                          Model model) {
 
         if (bindingResult.hasErrors()) {
-
-            model.addAttribute("drivers",
-                    driverService.getAllPageable(Pageable.unpaged()).getContent());
-
-            model.addAttribute("insuranceTypes", Map.of(
-                    InsuranceType.BASIC, "Basic",
-                    InsuranceType.PREMIUM, "Premium",
-                    InsuranceType.FULL_COVERAGE, "Full Coverage"
-            ));
+            if (booking.startTime() != null && booking.endTime() != null && booking.startTime().isBefore(booking.endTime())) {
+                model.addAttribute("cars", carService.findAvailable(booking.startTime(), booking.endTime()));
+            }
+            model.addAttribute("insuranceTypes", insuranceDisplayNames());
 
             return "bookings/create";
         }
 
         bookingService.create(booking);
         redirectAttributes.addFlashAttribute("success", "Booking created successfully!");
-        return "redirect:/bookings";
+        return "redirect:/";
+    }
+
+    private Map<InsuranceType, String> insuranceDisplayNames() {
+        return Map.of(
+                InsuranceType.BASIC, "Basic",
+                InsuranceType.PREMIUM, "Premium",
+                InsuranceType.FULL_COVERAGE, "Full Coverage"
+        );
     }
 }
