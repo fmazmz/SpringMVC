@@ -10,7 +10,7 @@ public class UserService {
         this.repository = repository;
     }
 
-    private void create(CreateUserDTO dto) {
+    public void create(CreateUserDTO dto) {
         if (repository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Unable to create an account with this email");
         }
