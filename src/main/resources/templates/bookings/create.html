@@ -85,7 +85,7 @@
                     <option value="">Select car</option>
                     <option th:each="car : ${cars}"
                             th:value="${car.id}"
-                            th:text="${car.make + ' ' + car.model + ' ' + car.id}">
+                            th:text="${car.make + ' - ' + car.model}">
                     </option>
                 </select>
                 <span class="field-error" th:errors="*{carId}"></span>
