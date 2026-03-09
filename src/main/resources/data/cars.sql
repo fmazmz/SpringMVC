@@ -1,5 +1,5 @@
 INSERT INTO car (id, make, model, hourly_price, licence_plate, vin, year) VALUES
-                                                                              (gen_random_uuid(), 'Volvo', 'XC60', 220, 'ABD123', 'YV1UZK5V6N1234501', 2022),
+                                                                              ('9b2e9b33-39ce-4f33-be9f-22e8c5a780a3', 'Volvo', 'XC60', 220, 'ABD123', 'YV1UZK5V6N1234501', 2022),
                                                                               (gen_random_uuid(), 'Volvo', 'V60', 200, 'DEF456', 'YV1ZWK5V1N1234502', 2021),
                                                                               (gen_random_uuid(), 'Volvo', 'XC90', 300, 'GHI789', 'YV4A22PK8M1234503', 2023),
                                                                               (gen_random_uuid(), 'Volvo', 'S60', 190, 'JKL012', 'YV1RSK2V5L1234504', 2020),
