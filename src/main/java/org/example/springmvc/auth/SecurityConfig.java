@@ -19,6 +19,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/signup/**", "/css/**").permitAll()
                         .requestMatchers("/cars/new").hasRole("ADMIN")
                         .requestMatchers("/drivers/**").hasRole("ADMIN")
+                        .requestMatchers("/bookings").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
