@@ -17,13 +17,13 @@
         <thead>
         <tr>
             <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
+                Driver ID
+            </th>
+            <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
                 First Name
             </th>
             <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
                 Last Name
-            </th>
-            <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
-                Email
             </th>
             <th style="border: 1px solid black; padding: 8px 16px; background-color: black; color: white;">
                 SSN
@@ -33,9 +33,9 @@
         <tbody>
 
         <tr th:each="d : ${drivers.content}">
+            <td th:text="${d.id}">Driver ID</td>
             <td th:text="${d.fname}">First Name</td>
             <td th:text="${d.lname}">Last Name</td>
-            <td th:text="${d.email}">Email</td>
             <td th:text="${d.ssn}">SSN</td>
         </tr>
         </tbody>

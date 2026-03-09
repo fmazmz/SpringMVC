@@ -2,10 +2,8 @@ package org.example.springmvc.drivers;
 
 import jakarta.validation.Valid;
 import org.example.springmvc.drivers.dto.CreateDriverDTO;
-import org.example.springmvc.drivers.dto.DriverDTO;
 import org.example.springmvc.users.model.User;
 import org.example.springmvc.users.UserService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -32,15 +30,16 @@ public class DriverController {
     @GetMapping
     public String listDrivers(
             @PageableDefault(value = 5) Pageable pageable,
+            @ModelAttribute DriverFilter filter,
             Model model
-            ) {
-        Page<DriverDTO> drivers = driverService.getAllPageable(pageable);
+    ) {
+        var drivers = driverService.search(pageable, filter);
         model.addAttribute("drivers", drivers);
-
+        model.addAttribute("filter", filter);
         return "drivers/list";
     }
 
-    // Show form for becoming a driver
+
     @GetMapping("/new")
     public String showDriverForm(Model model) {
         model.addAttribute("driver", new CreateDriverDTO(null, null, null));

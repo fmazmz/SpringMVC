@@ -59,4 +59,25 @@ public class DriverService {
         return driverRepository.findAll(pageable)
                 .map(DriverMapper::toDto);
     }
+
+    public Page<DriverDTO> search(Pageable pageable, DriverFilter filter) {
+        UUID driverId = null;
+        if (filter.driverId() != null && !filter.driverId().isBlank()) {
+            driverId = UUID.fromString(filter.driverId());
+        }
+
+        return driverRepository.searchDrivers(
+                wildcard(filter.q()),
+                wildcard(filter.fname()),
+                wildcard(filter.lname()),
+                wildcard(filter.ssn()),
+                driverId,
+                pageable
+        ).map(DriverMapper::toDto);
+    }
+
+    private String wildcard(String value) {
+        if (value == null || value.isBlank()) return null;
+        return "%" + value.trim().toLowerCase() + "%";
+    }
 }
