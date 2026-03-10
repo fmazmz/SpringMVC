@@ -106,6 +106,7 @@
     </form>
 
     <form th:if="${cars != null}" th:action="@{/bookings}" th:object="${booking}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input type="hidden" th:field="*{driverId}">
         <input type="hidden"
                name="startTime"

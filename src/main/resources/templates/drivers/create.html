@@ -16,6 +16,7 @@
 <div style="display: flex; text-align: center; align-items: center; flex-direction: column; margin-top: 0px">
 
     <form style="display:flex; flex-direction:column; gap:10px;" th:action="@{/drivers/new}" th:object="${driver}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <div style="display:flex; gap:10px; align-items:center;">
             <label for="fname" style="width:120px;">First Name</label>
