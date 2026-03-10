@@ -2,6 +2,7 @@ package org.example.springmvc.drivers;
 
 import org.example.springmvc.auth.SecurityUtils;
 import org.example.springmvc.drivers.dto.CreateDriverDTO;
+import org.example.springmvc.drivers.dto.UpdateDriverDTO;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.drivers.dto.DriverDTO;
 import org.example.springmvc.users.model.User;
@@ -58,6 +59,30 @@ public class DriverService {
     public Page<DriverDTO> getAllPageable(Pageable pageable) {
         return driverRepository.findAll(pageable)
                 .map(DriverMapper::toDto);
+    }
+
+    public DriverDTO getById(UUID driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new IllegalArgumentException("Driver not found"));
+        return DriverMapper.toDto(driver);
+    }
+
+    public void update(UUID driverId, UpdateDriverDTO dto) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new IllegalArgumentException("Driver not found"));
+
+        if (!driver.getSsn().equals(dto.ssn()) && driverRepository.findBySsn(dto.ssn()).isPresent()) {
+            throw new IllegalArgumentException("SSN already exists");
+        }
+
+        DriverMapper.updateEntity(driver, dto);
+        driverRepository.save(driver);
+    }
+
+    public void delete(UUID driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new IllegalArgumentException("Driver not found"));
+        driverRepository.delete(driver);
     }
 
     public Page<DriverDTO> search(Pageable pageable, DriverFilter filter) {
