@@ -20,6 +20,10 @@ public interface CarRepository extends ListCrudRepository<Car, UUID> {
 
     Optional<Car> findByLicencePlateIgnoreCase(String licencePlate);
 
+    boolean existsByLicencePlateIgnoreCaseAndIdNot(String licencePlate, UUID id);
+
+    boolean existsByVinIgnoreCaseAndIdNot(String vin, UUID id);
+
     @Query("""
 SELECT c
 FROM Car c
