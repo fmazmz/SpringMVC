@@ -14,11 +14,6 @@ import java.util.UUID;
 
 @Repository
 public interface BookingRepository extends ListCrudRepository<Booking, UUID> {
-    Page<Booking> findAll(Pageable pageable);
-    Page<Booking> findByCarId(Pageable pageable, UUID carId);
-    Page<Booking> findByDriverId(Pageable pageable, UUID driverId);
-    Page<Booking> findByInsuranceType(Pageable pageable, InsuranceType insuranceType);
-
 
     @Query("""
 SELECT COUNT(b) > 0

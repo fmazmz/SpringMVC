@@ -3,6 +3,7 @@ package org.example.springmvc.bookings;
 import jakarta.validation.Valid;
 import org.example.springmvc.bookings.dto.BookingDTO;
 import org.example.springmvc.bookings.dto.CreateBookingDTO;
+import org.example.springmvc.bookings.dto.UpdateBookingDTO;
 import org.example.springmvc.bookings.model.BookingFilter;
 import org.example.springmvc.cars.CarService;
 import org.example.springmvc.drivers.DriverService;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/bookings")
@@ -46,6 +48,13 @@ public class BookingController {
         model.addAttribute("bookings", bookings);
         model.addAttribute("filter", filter);
         return "bookings/list";
+    }
+
+    @GetMapping("/{id}")
+    public String viewBooking(@PathVariable UUID id, Model model) {
+        BookingDTO booking = bookingService.getById(id);
+        model.addAttribute("booking", booking);
+        return "bookings/view";
     }
 
     @GetMapping("/new")
@@ -93,13 +102,57 @@ public class BookingController {
                 model.addAttribute("cars", carService.findAvailable(booking.startTime(), booking.endTime()));
             }
             model.addAttribute("insuranceTypes", insuranceDisplayNames());
-
             return "bookings/create";
         }
 
         bookingService.create(booking);
-        redirectAttributes.addFlashAttribute("success", "Booking created successfully!");
-        return "redirect:/";
+        redirectAttributes.addFlashAttribute("success", "Booking created");
+        return "redirect:/bookings";
+    }
+
+    @GetMapping("/{id}/update")
+    public String updateForm(@PathVariable UUID id, Model model) {
+
+        BookingDTO booking = bookingService.getById(id);
+        UpdateBookingDTO updateDto = new UpdateBookingDTO(
+                booking.carId(),
+                booking.driverId(),
+                booking.startTime(),
+                booking.endTime(),
+                booking.insuranceType()
+        );
+
+        model.addAttribute("booking", updateDto);
+        model.addAttribute("insuranceTypes", insuranceDisplayNames());
+        model.addAttribute("isUpdate", true);
+        return "bookings/update";
+    }
+
+    @PostMapping("/{id}/update")
+    public String update(@PathVariable UUID id,
+                         @Valid @ModelAttribute("booking") UpdateBookingDTO booking,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes,
+                         Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("insuranceTypes", insuranceDisplayNames());
+            model.addAttribute("isUpdate", true);
+            return "bookings/update";
+        }
+
+        bookingService.update(id, booking);
+        redirectAttributes.addFlashAttribute("success", "Booking updated");
+        return "redirect:/bookings";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable UUID id,
+                         RedirectAttributes redirectAttributes) {
+
+        bookingService.delete(id);
+        redirectAttributes.addFlashAttribute("success", "Booking deleted");
+        return "redirect:/bookings";
     }
 
     private Map<InsuranceType, String> insuranceDisplayNames() {
