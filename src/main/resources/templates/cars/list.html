@@ -23,6 +23,7 @@
             <th>Licence Plate</th>
             <th>VIN</th>
             <th>Year</th>
+            <th>Update</th>
         </tr>
         </thead>
         <tbody>
@@ -34,6 +35,12 @@
             <td th:text="${c.licencePlate}">Licence Plate</td>
             <td th:text="${c.vin}">VIN</td>
             <td th:text="${c.year}">Year</td>
+
+            <td>
+                <a th:href="@{/cars/{id}/edit(id=${c.id})}">
+                    Update
+                </a>
+            </td>
         </tr>
 
         </tbody>
