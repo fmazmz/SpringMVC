@@ -1,6 +1,7 @@
 package org.example.springmvc.users;
 
 import org.example.springmvc.exceptions.DuplicateEntityException;
+import org.example.springmvc.exceptions.ErrorMessages;
 import org.example.springmvc.users.dto.CreateUserDTO;
 import org.example.springmvc.users.model.User;
 import org.example.springmvc.users.model.UserRole;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(CreateUserDTO dto) {
         if (repository.existsByEmail(dto.email())) {
-            throw new DuplicateEntityException("Unable to create an account with this email");
+            throw new DuplicateEntityException(ErrorMessages.DUPLICATE_USER_EMAIL);
         }
 
         String encryptedPassword = passwordEncoder.encode(dto.password());
@@ -38,7 +39,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return repository.findByEmail(auth.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        String email = auth.getName();
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        String.format(ErrorMessages.USER_NOT_FOUND_EMAIL, email)
+                ));
     }
 }
