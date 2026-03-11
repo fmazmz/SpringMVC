@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 @Profile("!test")
 @Order(1)
-public class SeedDatabase implements CommandLineRunner {
+public class DatabaseSeeder implements CommandLineRunner {
 
     private final UserService userService;
     private final UserRepository userRepository;
@@ -31,8 +31,8 @@ public class SeedDatabase implements CommandLineRunner {
     private final BookingService bookingService;
     private final CarRepository carRepository;
 
-    public SeedDatabase(UserService userService, UserRepository userRepository, DriverService driverService, 
-                       BookingService bookingService, CarRepository carRepository) {
+    public DatabaseSeeder(UserService userService, UserRepository userRepository, DriverService driverService,
+                          BookingService bookingService, CarRepository carRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.driverService = driverService;
@@ -42,10 +42,10 @@ public class SeedDatabase implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        seedTestDriver();
+        seedTestDriverAndBooking();
     }
 
-    private void seedTestDriver() {
+    private void seedTestDriverAndBooking() {
         String testEmail = "testdriver@email.com";
 
         CreateUserDTO createUserDTO = new CreateUserDTO(testEmail, "111");
@@ -76,23 +76,25 @@ public class SeedDatabase implements CommandLineRunner {
             return;
         }
 
-        Car car = cars.get(0);
+        List<Car> carsForBooking = List.of(cars.get(0), cars.get(1));
 
         Instant startTime = Instant.now().plusSeconds(86400);
         Instant endTime = Instant.now().plusSeconds(172800);
 
-        try {
-            CreateBookingDTO createBookingDTO = new CreateBookingDTO(
-                    car.getId(),
-                    driver.getId(),
-                    startTime,
-                    endTime,
-                    InsuranceType.BASIC
-            );
-            bookingService.create(createBookingDTO);
-            System.out.println("Seeded test driver with booking: " + testEmail);
-        } catch (Exception e) {
-            System.out.println("Booking may already exist for test driver: " + e.getMessage());
+        for (Car c : carsForBooking) {
+            try {
+                CreateBookingDTO createBookingDTO = new CreateBookingDTO(
+                        c.getId(),
+                        driver.getId(),
+                        startTime,
+                        endTime,
+                        InsuranceType.BASIC
+                );
+                bookingService.create(createBookingDTO);
+                System.out.println("Seeded test driver with booking: " + testEmail);
+            } catch (Exception e) {
+                System.out.println("Booking may already exist for test driver: " + e.getMessage());
+            }
         }
     }
 }
