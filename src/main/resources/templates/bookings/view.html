@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Details</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/tables.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/item.css}"/>
+</head>
+<body>
+
+<div class="page-header">
+    <h2>Booking Details</h2>
+</div>
+
+<div class="item-container">
+    <div class="item-row">
+        <span class="item-label">Driver ID:</span>
+        <span class="item-value" th:text="${booking.driverId}">Driver</span>
+    </div>
+
+    <div class="item-row">
+        <span class="item-label">Car:</span>
+        <span class="item-value" th:text="${booking.carMake + ' ' + booking.carModel + ' (ID: ' + booking.carId + ')'}">Car</span>
+    </div>
+
+    <div class="item-row">
+        <span class="item-label">Start Time:</span>
+        <span class="item-value" th:text="${#temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">Start Time</span>
+    </div>
+
+    <div class="item-row">
+        <span class="item-label">End Time:</span>
+        <span class="item-value" th:text="${#temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">End Time</span>
+    </div>
+
+    <div class="item-row">
+        <span class="item-label">Insurance Type:</span>
+        <span class="item-value" th:text="${booking.insuranceType}">Insurance Type</span>
+    </div>
+
+    <div class="item-row">
+        <span class="item-label">Total Price:</span>
+        <span class="item-value item-value-price" th:text="${'$' + #numbers.formatDecimal(booking.totalPrice, 1, 2)}">Total Price</span>
+    </div>
+</div>
+
+<div th:if="${success}" class="success-message">
+    <span th:text="${success}"></span>
+</div>
+
+</body>
+</html>

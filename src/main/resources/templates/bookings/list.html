@@ -23,6 +23,7 @@
             <th>End Time</th>
             <th>Insurance</th>
             <th>Total Price</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -34,6 +35,12 @@
             <td th:text="${b.endTime}">End Time</td>
             <td th:text="${b.insuranceType}">Insurance Type</td>
             <td th:text="${b.totalPrice}">Total Price</td>
+            <td>
+                <a th:href="@{/bookings/{id}(id=${b.id})}" style="text-decoration: none;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="button">View</button>
+                </a>
+            </td>
         </tr>
 
         </tbody>

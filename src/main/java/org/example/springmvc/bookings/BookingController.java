@@ -8,9 +8,11 @@ import org.example.springmvc.bookings.model.BookingFilter;
 import org.example.springmvc.cars.CarServiceImpl;
 import org.example.springmvc.drivers.DriverServiceImpl;
 import org.example.springmvc.drivers.model.Driver;
+import org.example.springmvc.exceptions.UnauthorizedActionException;
 import org.example.springmvc.insurances.InsuranceType;
 import org.example.springmvc.users.UserServiceImpl;
 import org.example.springmvc.users.model.User;
+import org.example.springmvc.users.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,12 +30,12 @@ import java.util.UUID;
 @RequestMapping("bookings")
 public class BookingController {
 
-    private final BookingServiceImpl bookingService;
+    private final BookingService bookingService;
     private final CarServiceImpl carService;
     private final DriverServiceImpl driverService;
     private final UserServiceImpl userService;
 
-    public BookingController(BookingServiceImpl bookingService, CarServiceImpl carService, DriverServiceImpl driverService, UserServiceImpl userService) {
+    public BookingController(BookingService bookingService, CarServiceImpl carService, DriverServiceImpl driverService, UserServiceImpl userService) {
         this.bookingService = bookingService;
         this.carService = carService;
         this.driverService = driverService;
@@ -71,6 +73,16 @@ public class BookingController {
     @GetMapping("{id}")
     public String view(@PathVariable UUID id, Model model) {
         BookingDTO booking = bookingService.getById(id);
+        
+        User currentUser = userService.getCurrentUser();
+        if (currentUser.getRole() != UserRole.ADMIN) {
+
+            Driver driver = currentUser.getDriver();
+            if (driver == null || !driver.getId().equals(booking.driverId())) {
+                throw new IllegalArgumentException("You are not authorized to view this booking.");
+            }
+        }
+        
         model.addAttribute("booking", booking);
         return "bookings/view";
     }
