@@ -19,9 +19,9 @@ import java.util.UUID;
 @RequestMapping("cars")
 public class CarController {
 
-    private final CarService carService;
+    private final CarServiceImpl carService;
 
-    public CarController(CarService carService) {
+    public CarController(CarServiceImpl carService) {
         this.carService = carService;
     }
 
