@@ -33,8 +33,9 @@ public class NonceFilter extends OncePerRequestFilter {
 
         response.setHeader("Content-Security-Policy",
                 "default-src 'self'; " +
-                        "script-src 'self' 'nonce-" + nonce + "'; " +
-                        "style-src 'self'; " +
+                        "script-src 'self' 'nonce-" + nonce + "' https://cdn.jsdelivr.net; " +
+                        "style-src 'self' https://fonts.googleapis.com; " +
+                        "font-src 'self' https://fonts.gstatic.com; " +
                         "object-src 'none'; " +
                         "base-uri 'self';");
 
