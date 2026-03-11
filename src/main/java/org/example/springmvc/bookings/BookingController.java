@@ -37,7 +37,7 @@ public class BookingController {
         this.bookingService = bookingService;
         this.carService = carService;
         this.driverService = driverService;
-        this.userService = userService;
+        this.userService = userService  ;
     }
 
     @GetMapping
@@ -48,6 +48,24 @@ public class BookingController {
         model.addAttribute("bookings", bookings);
         model.addAttribute("filter", filter);
         return "bookings/list";
+    }
+
+    @GetMapping("my-bookings")
+    public String driverBookings(
+            @PageableDefault(value = 5) Pageable pageable,
+            Model model){
+
+        User user = userService.getCurrentUser();
+        Driver driver = user.getDriver();
+
+        if (driver == null) {
+            throw new IllegalArgumentException("You are not registered as a driver");
+        }
+
+        Page<BookingDTO> bookings = bookingService.getDriverBookings(driver.getId(), pageable);
+        model.addAttribute("bookings", bookings);
+
+        return "bookings/my-bookings";
     }
 
     @GetMapping("{id}")
@@ -153,6 +171,22 @@ public class BookingController {
         bookingService.delete(id);
         redirectAttributes.addFlashAttribute("success", "Booking deleted");
         return "redirect:/bookings";
+    }
+
+    @PostMapping("my-bookings/{id}/delete")
+    public String deleteMyBooking(@PathVariable UUID id,
+                                  RedirectAttributes redirectAttributes) {
+
+        User user = userService.getCurrentUser();
+        Driver driver = user.getDriver();
+
+        if (driver == null) {
+            throw new IllegalArgumentException("You are not registered as a driver");
+        }
+
+        bookingService.deleteByDriver(id, driver.getId());
+        redirectAttributes.addFlashAttribute("success", "Booking cancelled");
+        return "redirect:/bookings/my-bookings";
     }
 
     private Map<InsuranceType, String> insuranceDisplayNames() {

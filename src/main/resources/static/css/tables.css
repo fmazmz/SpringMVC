@@ -1,5 +1,16 @@
 /* Table and List Page Styles */
 
+
+.page-header {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0px;
+}
+
 /* List page container */
 .list-container {
     display: flex;

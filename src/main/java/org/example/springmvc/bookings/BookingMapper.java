@@ -14,8 +14,11 @@ public class BookingMapper {
 
     public static BookingDTO toDto(Booking booking) {
         return new BookingDTO(
+                booking.getId(),
                 booking.getDriver().getId(),
                 booking.getCar().getId(),
+                booking.getCar().getMake(),
+                booking.getCar().getModel(),
                 booking.getStartTime(),
                 booking.getEndTime(),
                 booking.getInsuranceType(),

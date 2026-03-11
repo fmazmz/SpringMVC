@@ -107,4 +107,20 @@ public class BookingService {
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
         repository.delete(booking);
     }
+
+    public void deleteByDriver(UUID bookingId, UUID driverId) {
+        Booking booking = repository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+        
+        if (!booking.getDriver().getId().equals(driverId)) {
+            throw new IllegalArgumentException("You can only cancel your own bookings");
+        }
+        
+        repository.delete(booking);
+    }
+
+    public Page<BookingDTO> getDriverBookings(UUID driverId, Pageable pageable) {
+        return repository.findByDriverId(driverId, pageable)
+                .map(BookingMapper::toDto);
+    }
 }
