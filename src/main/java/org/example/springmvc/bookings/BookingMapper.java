@@ -16,6 +16,8 @@ public class BookingMapper {
         return new BookingDTO(
                 booking.getDriver().getId(),
                 booking.getCar().getId(),
+                booking.getCar().getMake(),
+                booking.getCar().getModel(),
                 booking.getStartTime(),
                 booking.getEndTime(),
                 booking.getInsuranceType(),

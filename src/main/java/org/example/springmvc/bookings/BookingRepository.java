@@ -15,22 +15,24 @@ import java.util.UUID;
 @Repository
 public interface BookingRepository extends ListCrudRepository<Booking, UUID> {
 
+    Page<Booking> findByDriverId(UUID driverId, Pageable pageable);
+
     @Query("""
-SELECT COUNT(b) > 0
-FROM Booking b
-WHERE b.car.id = :carId
-AND b.startTime < :endTime
-AND b.endTime > :startTime
-""")
+    SELECT COUNT(b) > 0
+    FROM Booking b
+    WHERE b.car.id = :carId
+    AND b.startTime < :endTime
+    AND b.endTime > :startTime
+    """)
     boolean existsOverlappingBooking(UUID carId, Instant startTime, Instant endTime);
 
 
     @Query("""
-SELECT b FROM Booking b
-WHERE (:carId IS NULL OR b.car.id = :carId)
-  AND (:driverId IS NULL OR b.driver.id = :driverId)
-  AND (:insuranceType IS NULL OR b.insuranceType = :insuranceType)
-""")
+    SELECT b FROM Booking b
+    WHERE (:carId IS NULL OR b.car.id = :carId)
+      AND (:driverId IS NULL OR b.driver.id = :driverId)
+      AND (:insuranceType IS NULL OR b.insuranceType = :insuranceType)
+    """)
     Page<Booking> searchBookings(
             @Param("carId") UUID carId,
             @Param("driverId") UUID driverId,

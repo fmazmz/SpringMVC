@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/drivers/**").hasRole("ADMIN")
 
                         .requestMatchers("/bookings/new").hasAnyRole("ADMIN","DRIVER")
+                        .requestMatchers("/bookings/my-bookings").hasAnyRole("ADMIN","DRIVER")
                         .requestMatchers("/bookings/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

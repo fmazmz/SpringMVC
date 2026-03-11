@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Bookings</title>
+    <title>My Bookings</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/tables.css}"/>
@@ -9,7 +9,7 @@
 <body>
 
 <div class="page-header">
-    <h2>Bookings</h2>
+    <h2>My Bookings</h2>
 </div>
 
 <div class="list-container">
@@ -17,7 +17,6 @@
     <table class="data-table">
         <thead>
         <tr>
-            <th>Driver</th>
             <th>Car</th>
             <th>Start Time</th>
             <th>End Time</th>
@@ -28,8 +27,7 @@
         <tbody>
 
         <tr th:each="b : ${bookings.content}">
-            <td th:text="${b.driverId}">Driver</td>
-            <td th:text="${b.carMake + ' - ' + b.carModel + ' - ' + b.carId}">Car</td>
+            <td th:text="${b.carMake + ' - ' + b.carModel}">Car</td>
             <td th:text="${b.startTime}">Start Time</td>
             <td th:text="${b.endTime}">End Time</td>
             <td th:text="${b.insuranceType}">Insurance Type</td>
@@ -42,7 +40,7 @@
 <div class="pagination">
 
     <a th:if="${bookings.hasPrevious()}"
-       th:href="@{/bookings(page=${bookings.number-1})}">
+       th:href="@{/bookings/my-bookings(page=${bookings.number-1})}">
         Previous
     </a>
 
@@ -52,7 +50,7 @@
     </span>
 
     <a th:if="${bookings.hasNext()}"
-       th:href="@{/bookings(page=${bookings.number+1})}">
+       th:href="@{/bookings/my-bookings(page=${bookings.number+1})}">
         Next
     </a>
 
