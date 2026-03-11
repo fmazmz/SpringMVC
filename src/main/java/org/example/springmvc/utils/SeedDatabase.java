@@ -13,6 +13,7 @@ import org.example.springmvc.users.UserService;
 import org.example.springmvc.users.dto.CreateUserDTO;
 import org.example.springmvc.users.model.User;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Component
+@Profile("!test")
 @Order(1)
 public class SeedDatabase implements CommandLineRunner {
 
