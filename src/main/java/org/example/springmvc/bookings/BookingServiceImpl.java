@@ -9,6 +9,9 @@ import org.example.springmvc.cars.CarRepository;
 import org.example.springmvc.cars.model.Car;
 import org.example.springmvc.drivers.DriverRepository;
 import org.example.springmvc.drivers.model.Driver;
+import org.example.springmvc.exceptions.DuplicateEntityException;
+import org.example.springmvc.exceptions.EntityNotFoundException;
+import org.example.springmvc.exceptions.UnauthorizedActionException;
 import org.example.springmvc.insurances.CarInsurance;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,24 +57,24 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public BookingDTO getById(UUID id) {
         Booking booking = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
         return BookingMapper.toDto(booking);
     }
 
     @Override
     public void create(CreateBookingDTO dto) {
         Car car = carRepository.findById(dto.carId())
-                .orElseThrow(() -> new IllegalArgumentException("Car not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Car not found"));
 
         Driver driver = driverRepository.findById(dto.driverId())
-                .orElseThrow(() -> new IllegalArgumentException("Driver not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Driver not found"));
 
         if (!dto.startTime().isBefore(dto.endTime())) {
             throw new IllegalArgumentException("Start time must be before end time.");
         }
 
         if (repository.existsOverlappingBooking(car.getId(), dto.startTime(), dto.endTime())) {
-            throw new IllegalArgumentException("Car already booked for that time.");
+            throw new DuplicateEntityException("Car already booked for that time.");
         }
 
         long hours = Duration.between(dto.startTime(), dto.endTime()).toHours();
@@ -86,13 +89,13 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void update(UUID id, UpdateBookingDTO dto) {
         Booking booking = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
 
         Car car = carRepository.findById(dto.carId())
-                .orElseThrow(() -> new IllegalArgumentException("Car not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Car not found"));
 
         Driver driver = driverRepository.findById(dto.driverId())
-                .orElseThrow(() -> new IllegalArgumentException("Driver not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Driver not found"));
 
         if (!dto.startTime().isBefore(dto.endTime())) {
             throw new IllegalArgumentException("Start time must be before end time.");
@@ -109,17 +112,17 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void delete(UUID id) {
         Booking booking = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
         repository.delete(booking);
     }
 
     @Override
     public void deleteByDriver(UUID bookingId, UUID driverId) {
         Booking booking = repository.findById(bookingId)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
         
         if (!booking.getDriver().getId().equals(driverId)) {
-            throw new IllegalArgumentException("You can only cancel your own bookings");
+            throw new UnauthorizedActionException("You can only cancel your own bookings");
         }
         
         repository.delete(booking);
