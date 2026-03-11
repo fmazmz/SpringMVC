@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/bookings")
+@RequestMapping("bookings")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -41,7 +41,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public String listBookings(@PageableDefault(value = 5) Pageable pageable,
+    public String list(@PageableDefault(value = 5) Pageable pageable,
                                @ModelAttribute BookingFilter filter,
                                Model model) {
         Page<BookingDTO> bookings = bookingService.search(pageable, filter);
@@ -50,14 +50,14 @@ public class BookingController {
         return "bookings/list";
     }
 
-    @GetMapping("/{id}")
-    public String viewBooking(@PathVariable UUID id, Model model) {
+    @GetMapping("{id}")
+    public String view(@PathVariable UUID id, Model model) {
         BookingDTO booking = bookingService.getById(id);
         model.addAttribute("booking", booking);
         return "bookings/view";
     }
 
-    @GetMapping("/new")
+    @GetMapping("new")
     public String createForm(@RequestParam(required = false) Instant startTime,
                              @RequestParam(required = false) Instant endTime,
                              Model model) {
@@ -91,7 +91,7 @@ public class BookingController {
         return "bookings/create";
     }
 
-    @PostMapping
+    @PostMapping("new")
     public String create(@Valid @ModelAttribute("booking") CreateBookingDTO booking,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
@@ -107,10 +107,10 @@ public class BookingController {
 
         bookingService.create(booking);
         redirectAttributes.addFlashAttribute("success", "Booking created");
-        return "redirect:/bookings";
+        return "redirect:/";
     }
 
-    @GetMapping("/{id}/update")
+    @GetMapping("{id}/update")
     public String updateForm(@PathVariable UUID id, Model model) {
 
         BookingDTO booking = bookingService.getById(id);
@@ -128,7 +128,7 @@ public class BookingController {
         return "bookings/update";
     }
 
-    @PostMapping("/{id}/update")
+    @PostMapping("{id}/update")
     public String update(@PathVariable UUID id,
                          @Valid @ModelAttribute("booking") UpdateBookingDTO booking,
                          BindingResult bindingResult,
@@ -146,7 +146,7 @@ public class BookingController {
         return "redirect:/bookings";
     }
 
-    @PostMapping("/{id}/delete")
+    @PostMapping("{id}/delete")
     public String delete(@PathVariable UUID id,
                          RedirectAttributes redirectAttributes) {
 

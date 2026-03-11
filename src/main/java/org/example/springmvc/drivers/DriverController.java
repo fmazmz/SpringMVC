@@ -29,7 +29,7 @@ public class DriverController {
     }
 
     @GetMapping
-    public String listDrivers(
+    public String list(
             @PageableDefault(value = 5) Pageable pageable,
             @ModelAttribute DriverFilter filter,
             Model model
@@ -41,14 +41,14 @@ public class DriverController {
     }
 
 
-    @GetMapping("/new")
-    public String showDriverForm(Model model) {
+    @GetMapping("new")
+    public String createForm(Model model) {
         model.addAttribute("driver", new CreateDriverDTO(null, null, null));
         return "drivers/create";
     }
 
-    @PostMapping("/new")
-    public String becomeDriver(
+    @PostMapping("new")
+    public String create(
             @Valid @ModelAttribute("driver") CreateDriverDTO dto,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
@@ -65,7 +65,7 @@ public class DriverController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}/update")
+    @GetMapping("{id}/update")
     public String updateForm(@PathVariable UUID id, Model model) {
         DriverDTO driver = driverService.getById(id);
         model.addAttribute("driver", new UpdateDriverDTO(driver.fname(), driver.lname(), driver.ssn()));
@@ -73,7 +73,7 @@ public class DriverController {
         return "drivers/update";
     }
 
-    @PostMapping("/{id}/update")
+    @PostMapping("{id}/update")
     public String update(@PathVariable UUID id,
                          @Valid @ModelAttribute("driver") UpdateDriverDTO dto,
                          BindingResult bindingResult,
@@ -89,7 +89,7 @@ public class DriverController {
         return "redirect:/drivers";
     }
 
-    @PostMapping("/{id}/delete")
+    @PostMapping("{id}/delete")
     public String delete(@PathVariable UUID id,
                          RedirectAttributes redirectAttributes) {
         driverService.delete(id);

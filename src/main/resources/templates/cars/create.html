@@ -14,7 +14,7 @@
 </div>
 <div class="form-container-simple">
 
-    <form class="form-simple" th:action="@{/cars}" th:object="${car}" method="post">
+    <form class="form-simple" th:action="@{/cars/new}" th:object="${car}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <div class="form-field-simple">

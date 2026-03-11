@@ -26,7 +26,7 @@ public class CarController {
     }
 
     @GetMapping
-    public String listCars(
+    public String list(
             @PageableDefault Pageable pageable,
             @ModelAttribute CarFilter filter,
             Model model
@@ -40,8 +40,8 @@ public class CarController {
         return "cars/list";
     }
 
-    @GetMapping("/new")
-    public String getCreationForm(Model model) {
+    @GetMapping("new")
+    public String createForm(Model model) {
         model.addAttribute(
                 "car",
                 new CreateCarDTO(null, null, null, null, null, null)
@@ -50,8 +50,8 @@ public class CarController {
         return "cars/create";
     }
 
-    @PostMapping
-    public String createCar(
+    @PostMapping("new")
+    public String create(
             @Valid @ModelAttribute("car") CreateCarDTO car,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
@@ -71,22 +71,22 @@ public class CarController {
         return "redirect:/cars";
     }
 
-    @GetMapping("/{id}")
-    public String getCar(@PathVariable UUID id, Model model) {
+    @GetMapping("{id}")
+    public String view(@PathVariable UUID id, Model model) {
         CarDTO car = carService.getById(id);
         model.addAttribute("car", car);
         return "cars/view";
     }
 
-    @GetMapping("/{id}/update")
-    public String editCarForm(@PathVariable UUID id, Model model) {
+    @GetMapping("{id}/update")
+    public String updateForm(@PathVariable UUID id, Model model) {
         CarDTO car = carService.getById(id);
         model.addAttribute("car", car);
         return "cars/update";
     }
 
-    @PostMapping("/{id}/update")
-    public String updateCar(
+    @PostMapping("{id}/update")
+    public String update(
             @PathVariable UUID id,
             @Valid @ModelAttribute("car") UpdateCarDTO carDto,
             BindingResult bindingResult,
@@ -101,8 +101,8 @@ public class CarController {
         return "redirect:/cars";
     }
 
-    @PostMapping("/{id}/delete")
-    public String deleteCar(
+    @PostMapping("{id}/delete")
+    public String delete(
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {

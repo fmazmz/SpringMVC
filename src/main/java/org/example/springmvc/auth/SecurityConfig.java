@@ -19,11 +19,15 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/signup/**", "/css/**").permitAll()
+
                         .requestMatchers("/cars/new").hasRole("ADMIN")
-                        .requestMatchers("/drivers").hasRole("ADMIN")
-                        .requestMatchers("/bookings/list").hasRole("ADMIN")
-                        .requestMatchers("/bookings/new").hasAnyRole("ADMIN", "DRIVER")
                         .requestMatchers("/cars").hasAnyRole("ADMIN", "DRIVER", "APP_USER")
+
+                        .requestMatchers("/drivers/new").hasRole("APP_USER")
+                        .requestMatchers("/drivers/**").hasRole("ADMIN")
+
+                        .requestMatchers("/bookings/new").hasAnyRole("ADMIN","DRIVER")
+                        .requestMatchers("/bookings/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 

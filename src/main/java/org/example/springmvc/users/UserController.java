@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/new")
+    @GetMapping("new")
     public String signupForm(Model model) {
         CreateUserDTO dto = new CreateUserDTO(null, null);
         model.addAttribute("user", dto);
@@ -28,7 +28,7 @@ public class UserController {
         return "users/signup";
     }
 
-    @PostMapping
+    @PostMapping("new")
     public String signup(
             @Valid @ModelAttribute("user") CreateUserDTO user,
             BindingResult bindingResult,
