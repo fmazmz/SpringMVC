@@ -11,6 +11,7 @@ import org.example.springmvc.drivers.DriverRepository;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.exceptions.DuplicateEntityException;
 import org.example.springmvc.exceptions.EntityNotFoundException;
+import org.example.springmvc.exceptions.InvalidBookingTimeException;
 import org.example.springmvc.exceptions.UnauthorizedActionException;
 import org.example.springmvc.insurances.CarInsurance;
 import org.springframework.data.domain.Page;
@@ -70,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new EntityNotFoundException("Driver not found"));
 
         if (!dto.startTime().isBefore(dto.endTime())) {
-            throw new IllegalArgumentException("Start time must be before end time.");
+            throw new InvalidBookingTimeException("Start time must be before end time.");
         }
 
         if (repository.existsOverlappingBooking(car.getId(), dto.startTime(), dto.endTime())) {
@@ -98,7 +99,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new EntityNotFoundException("Driver not found"));
 
         if (!dto.startTime().isBefore(dto.endTime())) {
-            throw new IllegalArgumentException("Start time must be before end time.");
+            throw new InvalidBookingTimeException("Start time must be before end time.");
         }
 
         long hours = Duration.between(dto.startTime(), dto.endTime()).toHours();
