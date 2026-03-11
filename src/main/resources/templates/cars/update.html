@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Car</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/forms.css}"/>
+</head>
+
+<body>
+
+<div class="page-header">
+    <h2>Update Car</h2>
+</div>
+
+<div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+<div class="form-container-simple">
+
+    <form class="form-simple"
+          th:action="@{/cars/{id}/update(id=${car.id})}"
+          th:object="${car}"
+          method="post">
+
+        <input type="hidden"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}" />
+
+        <div class="form-field-simple">
+            <label for="make">Make</label>
+            <div class="form-field-input">
+                <input type="text" id="make" th:field="*{make}">
+                <span class="field-error" th:errors="*{make}"></span>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="model">Model</label>
+            <div class="form-field-input">
+                <input type="text" id="model" th:field="*{model}">
+                <span class="field-error" th:errors="*{model}"></span>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="hourlyPrice">Hourly Price</label>
+            <div class="form-field-input">
+                <input type="number" id="hourlyPrice" th:field="*{hourlyPrice}">
+                <span class="field-error" th:errors="*{hourlyPrice}"></span>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="licencePlate">License Plate</label>
+            <div class="form-field-input">
+                <input type="text" id="licencePlate" th:field="*{licencePlate}">
+                <span class="field-error" th:errors="*{licencePlate}"></span>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="vin">VIN</label>
+            <div class="form-field-input">
+                <input type="text" id="vin" th:field="*{vin}">
+                <span class="field-error" th:errors="*{vin}"></span>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="year">Year</label>
+            <div class="form-field-input">
+                <input type="text" id="year" th:field="*{year}">
+                <span class="field-error" th:errors="*{year}"></span>
+            </div>
+        </div>
+
+        <div class="button-container-simple">
+            <button type="submit">Update Car</button>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
