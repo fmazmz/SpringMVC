@@ -5,7 +5,7 @@ import org.example.springmvc.drivers.dto.CreateDriverDTO;
 import org.example.springmvc.drivers.dto.DriverDTO;
 import org.example.springmvc.drivers.dto.UpdateDriverDTO;
 import org.example.springmvc.users.model.User;
-import org.example.springmvc.users.UserService;
+import org.example.springmvc.users.UserServiceImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -21,9 +21,9 @@ import java.util.UUID;
 public class DriverController {
 
     private final DriverServiceImpl driverService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public DriverController(DriverServiceImpl driverService, UserService userService) {
+    public DriverController(DriverServiceImpl driverService, UserServiceImpl userService) {
         this.driverService = driverService;
         this.userService = userService;
     }

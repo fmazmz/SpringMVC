@@ -9,7 +9,7 @@ import org.example.springmvc.drivers.dto.CreateDriverDTO;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.insurances.InsuranceType;
 import org.example.springmvc.users.UserRepository;
-import org.example.springmvc.users.UserService;
+import org.example.springmvc.users.UserServiceImpl;
 import org.example.springmvc.users.dto.CreateUserDTO;
 import org.example.springmvc.users.model.User;
 import org.springframework.boot.CommandLineRunner;
@@ -25,13 +25,13 @@ import java.util.List;
 @Order(1)
 public class DatabaseSeeder implements CommandLineRunner {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final UserRepository userRepository;
     private final DriverServiceImpl driverService;
     private final BookingServiceImpl bookingService;
     private final CarRepository carRepository;
 
-    public DatabaseSeeder(UserService userService, UserRepository userRepository, DriverServiceImpl driverService,
+    public DatabaseSeeder(UserServiceImpl userService, UserRepository userRepository, DriverServiceImpl driverService,
                           BookingServiceImpl bookingService, CarRepository carRepository) {
         this.userService = userService;
         this.userRepository = userRepository;

@@ -9,7 +9,7 @@ import org.example.springmvc.cars.CarServiceImpl;
 import org.example.springmvc.drivers.DriverServiceImpl;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.insurances.InsuranceType;
-import org.example.springmvc.users.UserService;
+import org.example.springmvc.users.UserServiceImpl;
 import org.example.springmvc.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +31,9 @@ public class BookingController {
     private final BookingServiceImpl bookingService;
     private final CarServiceImpl carService;
     private final DriverServiceImpl driverService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public BookingController(BookingServiceImpl bookingService, CarServiceImpl carService, DriverServiceImpl driverService, UserService userService) {
+    public BookingController(BookingServiceImpl bookingService, CarServiceImpl carService, DriverServiceImpl driverService, UserServiceImpl userService) {
         this.bookingService = bookingService;
         this.carService = carService;
         this.driverService = driverService;
