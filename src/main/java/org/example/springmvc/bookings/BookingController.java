@@ -5,11 +5,11 @@ import org.example.springmvc.bookings.dto.BookingDTO;
 import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.dto.UpdateBookingDTO;
 import org.example.springmvc.bookings.model.BookingFilter;
-import org.example.springmvc.cars.CarServiceImpl;
-import org.example.springmvc.drivers.DriverServiceImpl;
+import org.example.springmvc.cars.CarService;
+import org.example.springmvc.drivers.DriverService;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.insurances.InsuranceType;
-import org.example.springmvc.users.UserServiceImpl;
+import org.example.springmvc.users.UserService;
 import org.example.springmvc.users.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +29,11 @@ import java.util.UUID;
 public class BookingController {
 
     private final BookingService bookingService;
-    private final CarServiceImpl carService;
-    private final DriverServiceImpl driverService;
-    private final UserServiceImpl userService;
+    private final CarService carService;
+    private final DriverService driverService;
+    private final UserService userService;
 
-    public BookingController(BookingService bookingService, CarServiceImpl carService, DriverServiceImpl driverService, UserServiceImpl userService) {
+    public BookingController(BookingService bookingService, CarService carService, DriverService driverService, UserService userService) {
         this.bookingService = bookingService;
         this.carService = carService;
         this.driverService = driverService;
