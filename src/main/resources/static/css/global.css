@@ -3,6 +3,7 @@
 /* Global Font */
 html {
     font-family: 'IBM Plex Mono', monospace;
+    overflow-x: hidden;
 }
 
 /* Error Messages */
@@ -29,6 +30,7 @@ html {
     align-items: center;
     padding: 10px 20px;
     background-color: cornflowerblue;
+    border-radius: 10px;
     gap: 10px;
 }
 
@@ -111,4 +113,14 @@ html {
 /* Change button color on hover */
 .dropdown:hover .dropbtn {
     background-color: darkblue;
+}
+
+/* Background image for index page */
+body {
+    background-image: url('/images/cars.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow-x: hidden;
 }
