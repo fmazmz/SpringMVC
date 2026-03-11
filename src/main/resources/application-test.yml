@@ -8,6 +8,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
   sql:
     init:
       mode: never
