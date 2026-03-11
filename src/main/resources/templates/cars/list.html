@@ -23,7 +23,7 @@
             <th>Licence Plate</th>
             <th>VIN</th>
             <th>Year</th>
-            <th>Update</th>
+            <th th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Update</th>
         </tr>
         </thead>
         <tbody>
@@ -36,10 +36,8 @@
             <td th:text="${c.vin}">VIN</td>
             <td th:text="${c.year}">Year</td>
 
-            <td>
-                <a th:href="@{/cars/{id}/update(id=${c.id})}">
-                    Update
-                </a>
+            <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a th:href="@{/cars/{id}/update(id=${c.id})}">Update</a>
             </td>
         </tr>
 

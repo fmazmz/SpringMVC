@@ -5,6 +5,7 @@ import org.example.springmvc.cars.dto.CreateCarDTO;
 import org.example.springmvc.cars.dto.UpdateCarDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,7 @@ public class CarController {
         return "cars/list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("new")
     public String createForm(Model model) {
         model.addAttribute(
@@ -50,6 +52,7 @@ public class CarController {
         return "cars/create";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("new")
     public String create(
             @Valid @ModelAttribute("car") CreateCarDTO car,
@@ -78,6 +81,7 @@ public class CarController {
         return "cars/view";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{id}/update")
     public String updateForm(@PathVariable UUID id, Model model) {
         CarDTO car = carService.getById(id);
@@ -85,6 +89,7 @@ public class CarController {
         return "cars/update";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("{id}/update")
     public String update(
             @PathVariable UUID id,
@@ -101,6 +106,7 @@ public class CarController {
         return "redirect:/cars";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("{id}/delete")
     public String delete(
             @PathVariable UUID id,
