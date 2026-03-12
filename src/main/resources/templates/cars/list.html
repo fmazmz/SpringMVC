@@ -26,11 +26,11 @@
             <th>Licence Plate</th>
             <th>VIN</th>
             <th>Year</th>
-            <th sec:authorize="hasRole('ADMIN')">Actions</th>
+            <th sec:authorize="hasRole('ADMIN')">Update</th>
+            <th sec:authorize="hasRole('ADMIN')">Delete</th>
         </tr>
         </thead>
         <tbody>
-
         <tr th:each="c : ${cars.content}">
             <td th:text="${c.make}">Make</td>
             <td th:text="${c.model}">Model</td>
@@ -41,12 +41,16 @@
 
             <td sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/cars/{id}/update(id=${c.id})}">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <button type="button">Update</button>
                 </a>
             </td>
-        </tr>
 
+            <td sec:authorize="hasRole('ADMIN')">
+                <form th:action="@{/cars/{id}/delete(id=${c.id})}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>

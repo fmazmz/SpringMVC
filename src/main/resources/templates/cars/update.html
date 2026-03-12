@@ -19,7 +19,7 @@
 <div class="form-container-simple">
 
     <form class="form-simple"
-          th:action="@{/cars/{id}/update(id=${car.id})}"
+          th:action="@{/cars/{id}/update(id=${carId})}"
           th:object="${car}"
           method="post">
 
@@ -46,7 +46,7 @@
         <div class="form-field-simple">
             <label for="hourlyPrice">Hourly Price</label>
             <div class="form-field-input">
-                <input type="number" id="hourlyPrice" th:field="*{hourlyPrice}">
+                <input type="number" step="0.01" id="hourlyPrice" th:field="*{hourlyPrice}">
                 <span class="field-error" th:errors="*{hourlyPrice}"></span>
             </div>
         </div>
@@ -70,7 +70,7 @@
         <div class="form-field-simple">
             <label for="year">Year</label>
             <div class="form-field-input">
-                <input type="text" id="year" th:field="*{year}">
+                <input type="number" id="year" th:field="*{year}">
                 <span class="field-error" th:errors="*{year}"></span>
             </div>
         </div>
