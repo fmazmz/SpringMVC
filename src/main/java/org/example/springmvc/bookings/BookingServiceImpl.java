@@ -111,12 +111,29 @@ public class BookingServiceImpl implements BookingService {
             throw new InvalidBookingTimeException(ErrorMessages.INVALID_BOOKING_TIME);
         }
 
+        if (!booking.getStartTime().equals(dto.startTime()) ||
+                !booking.getEndTime().equals(dto.endTime()) ||
+                !booking.getCar().getId().equals(dto.carId())) {
+
+            if (repository.existsOverlappingBookingExcludingId(
+                    car.getId(),
+                    dto.startTime(),
+                    dto.endTime(),
+                    id)) {
+                throw new DuplicateEntityException(ErrorMessages.BOOKING_DUPLICATE);
+            }
+        }
+
         long hours = Duration.between(dto.startTime(), dto.endTime()).toHours();
+        if (hours <= 0) {
+            throw new InvalidBookingTimeException("Booking duration must be at least 1 hour");
+        }
+
         BigDecimal carCost = car.getHourlyPrice().multiply(BigDecimal.valueOf(hours));
         BigDecimal insuranceCost = insurance.getPrice(dto.insuranceType());
         BigDecimal total = carCost.add(insuranceCost);
-        BookingMapper.updateEntity(booking, car, driver, dto, total);
 
+        BookingMapper.updateEntity(booking, car, driver, dto, total);
     }
 
     @Override

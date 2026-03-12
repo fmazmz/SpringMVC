@@ -1,70 +1,77 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Bookings</title>
+    <title>All Bookings - Fleetify</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/tables.css}"/>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="bookings-wrapper">
-    <div class="bookings-card">
-        <h2 class="bookings-title">All Bookings</h2>
+<div class="page-header">
+    <h2>All Bookings</h2>
+</div>
 
-        <div class="table-container">
-            <table class="bookings-table">
-                <thead>
-                <tr>
-                    <th>Driver</th>
-                    <th>Car</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Insurance</th>
-                    <th>Total Price</th>
-                    <th>View</th>
-                    <th>Cancel</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="b : ${bookings.content}">
-                    <td th:text="${b.driverId}">Driver</td>
-                    <td th:text="${b.carMake + ' - ' + b.carModel}">Car</td>
-                    <td th:text="${#temporals.format(b.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, HH:mm')}">Start</td>
-                    <td th:text="${#temporals.format(b.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, HH:mm')}">End</td>
-                    <td th:text="${b.insuranceType}">Insurance</td>
-                    <td th:text="${'$' + #numbers.formatDecimal(b.totalPrice, 1, 2)}">Price</td>
-                    <td>
-                        <a th:href="@{/bookings/{id}(id=${b.id})}">
-                            <button class="btn-secondary">View</button>
-                        </a>
-                    </td>
-                    <td>
-                        <form th:action="@{/bookings/{id}/delete(id=${b.id})}" method="post" style="display: inline;">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <button type="submit" class="btn-secondary btn-danger">Cancel</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+<div th:if="${success}" class="success-message">
+    <span th:text="${success}"></span>
+</div>
 
-        <div class="pagination-nav" th:if="${bookings.totalPages > 1}">
-            <a th:if="${bookings.hasPrevious()}"
-               th:href="@{/bookings(page=${bookings.number-1}, carId=${param.carId}, driverId=${param.driverId}, insuranceType=${param.insuranceType}, sort=${param.sort})}">
-                Previous
-            </a>
-            <span>Page <span th:text="${bookings.number + 1}"></span> of <span th:text="${bookings.totalPages}"></span></span>
-            <a th:if="${bookings.hasNext()}"
-               th:href="@{/bookings(page=${bookings.number+1}, carId=${param.carId}, driverId=${param.driverId}, insuranceType=${param.insuranceType}, sort=${param.sort})}">
-                Next
-            </a>
-        </div>
+<div class="list-container">
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th>Driver</th>
+            <th>Car</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Insurance</th>
+            <th>Total Price</th>
+            <th>View</th>
+            <th>Update</th>
+            <th>Cancel</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${bookings.content}">
+            <td th:text="${b.driverId}">Driver</td>
+            <td th:text="${b.carMake + ' - ' + b.carModel}">Car</td>
+            <td th:text="${#temporals.format(b.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, HH:mm')}">Start</td>
+            <td th:text="${#temporals.format(b.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, HH:mm')}">End</td>
+            <td th:text="${b.insuranceType}">Insurance</td>
+            <td th:text="${'$' + #numbers.formatDecimal(b.totalPrice, 1, 2)}">Price</td>
+            <td>
+                <a th:href="@{/bookings/{id}(id=${b.id})}">
+                    <button type="button">View</button>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/bookings/{id}/update(id=${b.id})}" sec:authorize="hasRole('ADMIN')">
+                    <button type="button" style="background: rgba(255, 255, 255, 0.15);">Update</button>
+                </a>
+            </td>
+            <td>
+                <form th:action="@{/bookings/{id}/delete(id=${b.id})}" method="post" style="display: inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" style="border-color: rgba(255, 80, 80, 0.3); color: #ffb3b3;">
+                        Cancel
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-        <div th:if="${success}" class="message success">
-            <span th:text="${success}"></span>
-        </div>
+    <div class="pagination" th:if="${bookings.totalPages > 1}">
+        <a th:if="${bookings.hasPrevious()}"
+           th:href="@{/bookings(page=${bookings.number-1})}">
+            ← Previous
+        </a>
+        <span>Page <span th:text="${bookings.number + 1}"></span> of <span th:text="${bookings.totalPages}"></span></span>
+        <a th:if="${bookings.hasNext()}"
+           th:href="@{/bookings(page=${bookings.number+1})}">
+            Next →
+        </a>
     </div>
 </div>
 </body>

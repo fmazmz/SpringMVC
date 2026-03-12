@@ -6,7 +6,9 @@ import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.dto.UpdateBookingDTO;
 import org.example.springmvc.bookings.model.BookingFilter;
 import org.example.springmvc.cars.CarService;
+import org.example.springmvc.cars.dto.CarDTO;
 import org.example.springmvc.drivers.DriverService;
+import org.example.springmvc.drivers.dto.DriverDTO;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.insurances.InsuranceType;
 import org.example.springmvc.users.UserService;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,13 +43,13 @@ public class BookingController {
         this.bookingService = bookingService;
         this.carService = carService;
         this.driverService = driverService;
-        this.userService = userService  ;
+        this.userService = userService;
     }
 
     @GetMapping
     public String list(@PageableDefault(value = 5) Pageable pageable,
-                               @ModelAttribute BookingFilter filter,
-                               Model model) {
+                       @ModelAttribute BookingFilter filter,
+                       Model model) {
         Page<BookingDTO> bookings = bookingService.search(pageable, filter);
         model.addAttribute("bookings", bookings);
         model.addAttribute("filter", filter);
@@ -54,7 +59,7 @@ public class BookingController {
     @GetMapping("my-bookings")
     public String driverBookings(
             @PageableDefault(value = 5) Pageable pageable,
-            Model model){
+            Model model) {
 
         User user = userService.getCurrentUser();
         Driver driver = user.getDriver();
@@ -141,37 +146,91 @@ public class BookingController {
 
     @GetMapping("{id}/update")
     public String updateForm(@PathVariable UUID id, Model model) {
+        try {
+            BookingDTO booking = bookingService.getById(id);
+            UpdateBookingDTO updateDto = new UpdateBookingDTO(
+                    booking.carId(),
+                    booking.driverId(),
+                    booking.startTime(),
+                    booking.endTime(),
+                    booking.insuranceType()
+            );
 
-        BookingDTO booking = bookingService.getById(id);
-        UpdateBookingDTO updateDto = new UpdateBookingDTO(
-                booking.carId(),
-                booking.driverId(),
-                booking.startTime(),
-                booking.endTime(),
-                booking.insuranceType()
-        );
+            CarDTO car = carService.getById(booking.carId());
+            String carDisplay = car.make() + " " + car.model() + " (" + car.licencePlate() + ")";
 
-        model.addAttribute("booking", updateDto);
-        model.addAttribute("insuranceTypes", insuranceDisplayNames());
-        model.addAttribute("isUpdate", true);
+            DriverDTO driver = driverService.getById(booking.driverId());
+            String driverDisplay = driver.fname() + " " + driver.lname();
+
+            String formattedStartTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
+                    .format(booking.startTime().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            String formattedEndTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
+                    .format(booking.endTime().atZone(ZoneId.systemDefault()).toLocalDateTime());
+
+            model.addAttribute("booking", updateDto);
+            model.addAttribute("bookingId", id);
+            model.addAttribute("carDisplay", carDisplay);
+            model.addAttribute("driverDisplay", driverDisplay);
+            model.addAttribute("formattedStartTime", formattedStartTime);
+            model.addAttribute("formattedEndTime", formattedEndTime);
+            model.addAttribute("insuranceTypes", insuranceDisplayNames());
+            model.addAttribute("isUpdate", true);
+
+        } catch (Exception e) {
+            model.addAttribute("error", "Error loading booking: " + e.getMessage());
+            return "redirect:/bookings";
+        }
+
         return "bookings/update";
     }
 
     @PostMapping("{id}/update")
     public String update(@PathVariable UUID id,
-                         @Valid @ModelAttribute("booking") UpdateBookingDTO booking,
+                         @Valid @ModelAttribute("booking") UpdateBookingDTO bookingDto,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
                          Model model) {
 
+
         if (bindingResult.hasErrors()) {
-            model.addAttribute("insuranceTypes", insuranceDisplayNames());
-            model.addAttribute("isUpdate", true);
+            try {
+                BookingDTO originalBooking = bookingService.getById(id);
+
+                CarDTO car = carService.getById(originalBooking.carId());
+                String carDisplay = car.make() + " " + car.model() + " (" + car.licencePlate() + ")";
+
+                DriverDTO driver = driverService.getById(originalBooking.driverId());
+                String driverDisplay = driver.fname() + " " + driver.lname();
+
+                String formattedStartTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
+                        .format(originalBooking.startTime().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                String formattedEndTime = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
+                        .format(originalBooking.endTime().atZone(ZoneId.systemDefault()).toLocalDateTime());
+
+                model.addAttribute("booking", bookingDto);
+                model.addAttribute("bookingId", id);
+                model.addAttribute("carDisplay", carDisplay);
+                model.addAttribute("driverDisplay", driverDisplay);
+                model.addAttribute("formattedStartTime", formattedStartTime);
+                model.addAttribute("formattedEndTime", formattedEndTime);
+                model.addAttribute("insuranceTypes", insuranceDisplayNames());
+                model.addAttribute("isUpdate", true);
+
+            } catch (Exception e) {
+                model.addAttribute("error", "Error reloading form: " + e.getMessage());
+            }
+
             return "bookings/update";
         }
 
-        bookingService.update(id, booking);
-        redirectAttributes.addFlashAttribute("success", "Booking updated");
+        try {
+            bookingService.update(id, bookingDto);
+            redirectAttributes.addFlashAttribute("success", "Booking updated successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update booking: " + e.getMessage());
+            return "redirect:/bookings/" + id + "/update";
+        }
+
         return "redirect:/bookings";
     }
 
@@ -179,8 +238,13 @@ public class BookingController {
     public String delete(@PathVariable UUID id,
                          RedirectAttributes redirectAttributes) {
 
-        bookingService.delete(id);
-        redirectAttributes.addFlashAttribute("success", "Booking deleted");
+        try {
+            bookingService.delete(id);
+            redirectAttributes.addFlashAttribute("success", "Booking deleted");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete booking: " + e.getMessage());
+        }
+
         return "redirect:/bookings";
     }
 
@@ -188,15 +252,20 @@ public class BookingController {
     public String deleteMyBooking(@PathVariable UUID id,
                                   RedirectAttributes redirectAttributes) {
 
-        User user = userService.getCurrentUser();
-        Driver driver = user.getDriver();
+        try {
+            User user = userService.getCurrentUser();
+            Driver driver = user.getDriver();
 
-        if (driver == null) {
-            throw new IllegalArgumentException("You are not registered as a driver");
+            if (driver == null) {
+                throw new IllegalArgumentException("You are not registered as a driver");
+            }
+
+            bookingService.deleteByDriver(id, driver.getId());
+            redirectAttributes.addFlashAttribute("success", "Booking cancelled");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to cancel booking: " + e.getMessage());
         }
 
-        bookingService.deleteByDriver(id, driver.getId());
-        redirectAttributes.addFlashAttribute("success", "Booking cancelled");
         return "redirect:/bookings/my-bookings";
     }
 

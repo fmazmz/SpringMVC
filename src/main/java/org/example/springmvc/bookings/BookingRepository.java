@@ -39,4 +39,20 @@ public interface BookingRepository extends ListCrudRepository<Booking, UUID> {
             @Param("insuranceType") InsuranceType insuranceType,
             Pageable pageable
     );
+
+    @Query("""
+    SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END 
+    FROM Booking b 
+    WHERE b.car.id = :carId 
+    AND b.id != :excludeId
+    AND (
+        (b.startTime <= :endTime AND b.endTime >= :startTime)
+    )
+    """)
+    boolean existsOverlappingBookingExcludingId(
+            @Param("carId") UUID carId,
+            @Param("startTime") Instant startTime,
+            @Param("endTime") Instant endTime,
+            @Param("excludeId") UUID excludeId
+    );
 }

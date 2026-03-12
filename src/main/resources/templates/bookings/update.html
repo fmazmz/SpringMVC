@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Booking - Fleetify</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/forms.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="page-header">
+    <h2>Update Booking</h2>
+</div>
+
+<div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+<div th:if="${success}" class="success-message" th:text="${success}"></div>
+
+<div class="form-container">
+    <form th:action="@{/bookings/{id}/update(id=${bookingId})}"
+          th:object="${booking}"
+          method="post"
+          class="form-simple">
+
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <input type="hidden" th:field="*{carId}" />
+        <input type="hidden" th:field="*{driverId}" />
+
+        <div class="form-field">
+            <label for="carDisplay">Car</label>
+            <div class="form-field-input">
+                <input type="text"
+                       id="carDisplay"
+                       name="carDisplay"
+                       th:value="${carDisplay}"
+                       readonly
+                       class="readonly-field">
+                <span class="field-error" th:if="${#fields.hasErrors('carId')}" th:errors="*{carId}"></span>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="driverDisplay">Driver</label>
+            <div class="form-field-input">
+                <input type="text"
+                       id="driverDisplay"
+                       name="driverDisplay"
+                       th:value="${driverDisplay}"
+                       readonly
+                       class="readonly-field">
+                <span class="field-error" th:if="${#fields.hasErrors('driverId')}" th:errors="*{driverId}"></span>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="startTime">Start Time <span class="required">*</span></label>
+            <div class="form-field-input">
+                <input type="datetime-local"
+                       id="startTime"
+                       th:field="*{startTime}"
+                       th:value="${formattedStartTime}"
+                       required
+                       class="datetime-input">
+                <span class="field-error" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></span>
+                <small class="field-hint">Format: YYYY-MM-DD HH:MM</small>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="endTime">End Time <span class="required">*</span></label>
+            <div class="form-field-input">
+                <input type="datetime-local"
+                       id="endTime"
+                       th:field="*{endTime}"
+                       th:value="${formattedEndTime}"
+                       required
+                       class="datetime-input">
+                <span class="field-error" th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}"></span>
+                <small class="field-hint">Format: YYYY-MM-DD HH:MM</small>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="insuranceType">Insurance <span class="required">*</span></label>
+            <div class="form-field-input">
+                <select id="insuranceType" th:field="*{insuranceType}" class="select-input">
+                    <option value="">Select Insurance Type</option>
+                    <option th:each="type : ${insuranceTypes}"
+                            th:value="${type.key}"
+                            th:text="${type.value}"
+                            th:selected="${type.key == booking.insuranceType}">
+                    </option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('insuranceType')}" th:errors="*{insuranceType}"></span>
+            </div>
+        </div>
+
+        <div class="button-container" style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+            <button type="submit" class="action-btn">Update Booking</button>
+            <a th:href="@{/bookings}">
+                <button type="button" class="action-btn" style="background: rgba(255, 255, 255, 0.1);">Cancel</button>
+            </a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

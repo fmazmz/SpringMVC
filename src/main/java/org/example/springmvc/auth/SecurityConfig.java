@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/bookings/new").hasAnyRole("ADMIN","DRIVER")
                         .requestMatchers("/bookings/my-bookings/**").hasAnyRole("ADMIN","DRIVER")
                         .requestMatchers(HttpMethod.GET,"/bookings/{id}").hasAnyRole("ADMIN","DRIVER")
+                        .requestMatchers("/bookings/{id}/update").hasRole("ADMIN")
                         .requestMatchers("/bookings/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
