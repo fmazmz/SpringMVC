@@ -53,9 +53,7 @@
 <div class="pagination">
 
     <a th:if="${cars.hasPrevious()}"
-       th:href="${make != null and !make.isEmpty()} ?
-                 @{/cars(page=${cars.number-1}, make=${make})} :
-                 @{/cars(page=${cars.number-1})}">
+       th:href="@{/cars(page=${cars.number-1}, q=${param.q}, make=${param.make}, model=${param.model}, year=${param.year}, licencePlate=${param.licencePlate}, vin=${param.vin}, sort=${param.sort})}">
         Previous
     </a>
 
@@ -65,9 +63,7 @@
     </span>
 
     <a th:if="${cars.hasNext()}"
-       th:href="${make != null and !make.isEmpty()} ?
-                 @{/cars(page=${cars.number+1}, make=${make})} :
-                 @{/cars(page=${cars.number+1})}">
+       th:href="@{/cars(page=${cars.number+1}, q=${param.q}, make=${param.make}, model=${param.model}, year=${param.year}, licencePlate=${param.licencePlate}, vin=${param.vin}, sort=${param.sort})}">
         Next
     </a>
 

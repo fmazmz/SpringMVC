@@ -50,7 +50,7 @@
 <div class="pagination">
 
     <a th:if="${bookings.hasPrevious()}"
-       th:href="@{/bookings(page=${bookings.number-1})}">
+       th:href="@{/bookings(page=${bookings.number-1}, carId=${param.carId}, driverId=${param.driverId}, insuranceType=${param.insuranceType}, sort=${param.sort})}">
         Previous
     </a>
 
@@ -60,7 +60,7 @@
     </span>
 
     <a th:if="${bookings.hasNext()}"
-       th:href="@{/bookings(page=${bookings.number+1})}">
+       th:href="@{/bookings(page=${bookings.number+1}, carId=${param.carId}, driverId=${param.driverId}, insuranceType=${param.insuranceType}, sort=${param.sort})}">
         Next
     </a>
 
