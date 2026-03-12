@@ -125,14 +125,38 @@ html {
 }
 
 /* Background image for index page */
-body {
-    background-image: url('/images/cars.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
     overflow-x: hidden;
 }
+
+body {
+    min-height: 100vh;
+    background-image: url('/images/CarBackground.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+body.home-page {
+    background: none;
+    position: relative;
+    min-height: 100vh;
+}
+
+.home-background {
+    position: fixed;
+    inset: 0;
+    background-image: url('/images/FrontPic.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
 /* --- Navbar isolation: ensure no page-level CSS overrides navbar styling --- */
 .navbar form {
     display: inline-flex;
@@ -159,4 +183,174 @@ body {
 
 .navbar .navbar-right button:not(.dropbtn):hover {
     background-color: darkblue;
+}
+
+/* Professional Transparent Floating Login Form */
+.floating-login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 420px;
+    background: rgba(10, 10, 10, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 16px;
+    padding: 40px 35px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.floating-login h2 {
+    text-align: center;
+    color: white;
+    font-size: 32px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.floating-login .subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.floating-login .form-group {
+    margin-bottom: 20px;
+}
+
+.floating-login label {
+    display: block;
+    margin-bottom: 6px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.floating-login input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: white;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.floating-login input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.floating-login input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13px;
+}
+
+.floating-login .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 20px;
+    letter-spacing: 0.5px;
+}
+
+.floating-login .login-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.floating-login .login-btn:active {
+    transform: translateY(1px);
+}
+
+.floating-login .error-message {
+    background: rgba(255, 80, 80, 0.15);
+    border: 1px solid rgba(255, 80, 80, 0.3);
+    color: #ffb3b3;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.floating-login .success-message {
+    background: rgba(80, 255, 80, 0.15);
+    border: 1px solid rgba(80, 255, 80, 0.3);
+    color: #b3ffb3;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.floating-login .footer-links {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.floating-login .footer-links p {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.floating-login .footer-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 1px;
+}
+
+.floating-login .footer-links a:hover {
+    opacity: 0.8;
+    border-bottom-color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .floating-login {
+        width: 95%;
+        padding: 30px 20px;
+    }
+
+    .floating-login h2 {
+        font-size: 28px;
+    }
 }
