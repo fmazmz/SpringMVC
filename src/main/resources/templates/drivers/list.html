@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Drivers</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -14,7 +14,6 @@
 </div>
 
 <div class="list-container">
-
     <table class="data-table">
         <thead>
         <tr>
@@ -22,19 +21,33 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>SSN</th>
+            <th sec:authorize="hasRole('ADMIN')">Update</th>
+            <th sec:authorize="hasRole('ADMIN')">Delete</th>
         </tr>
         </thead>
         <tbody>
-
         <tr th:each="d : ${drivers.content}">
             <td th:text="${d.id}">Driver ID</td>
             <td th:text="${d.fname}">First Name</td>
             <td th:text="${d.lname}">Last Name</td>
             <td th:text="${d.ssn}">SSN</td>
+
+            <td sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/drivers/{id}/update(id=${d.id})}">
+                    <button type="button">Update</button>
+                </a>
+            </td>
+
+            <td sec:authorize="hasRole('ADMIN')">
+                <form th:action="@{/drivers/{id}/delete(id=${d.id})}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
+
 <div class="pagination">
 
     <a th:if="${drivers.hasPrevious()}"

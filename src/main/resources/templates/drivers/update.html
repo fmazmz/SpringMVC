@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Driver</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/forms.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="page-header">
+    <h2>Update Driver</h2>
+</div>
+
+<div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+<div class="form-container-simple">
+    <form class="form-simple" th:action="@{/drivers/{id}/update(id=${driverId})}" th:object="${driver}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <div class="form-field-simple">
+            <label for="fname">First Name</label>
+            <div class="form-field-input">
+                <input type="text" id="fname" th:field="*{fname}">
+                <span class="field-error" th:errors="*{fname}"></span>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="lname">Last Name</label>
+            <div class="form-field-input">
+                <input type="text" id="lname" th:field="*{lname}">
+                <span class="field-error" th:errors="*{lname}"></span>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="ssn">SSN</label>
+            <div class="form-field-input">
+                <input type="text" id="ssn" th:field="*{ssn}">
+                <span class="field-error" th:errors="*{ssn}"></span>
+            </div>
+        </div>
+
+        <div class="button-container-simple">
+            <button type="submit">Update Driver</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
