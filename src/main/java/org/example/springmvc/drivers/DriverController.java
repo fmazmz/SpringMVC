@@ -70,6 +70,7 @@ public class DriverController {
         DriverDTO driver = driverService.getById(id);
         model.addAttribute("driver", new UpdateDriverDTO(driver.fname(), driver.lname(), driver.ssn()));
         model.addAttribute("isUpdate", true);
+        model.addAttribute("driverId", id);
         return "drivers/update";
     }
 
@@ -81,6 +82,7 @@ public class DriverController {
                          Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("isUpdate", true);
+            model.addAttribute("driverId", id);
             return "drivers/update";
         }
 

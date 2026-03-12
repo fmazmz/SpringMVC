@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.springmvc.bookings.model.Booking;
 import org.example.springmvc.cars.model.Car;
 import org.example.springmvc.users.model.User;
 
@@ -37,6 +38,9 @@ public class Driver {
 
     @OneToOne(mappedBy = "driver", fetch = FetchType.LAZY)
     private User user;
+
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Booking> bookings = new ArrayList<>();
 
     public Driver(String fname, String lname, String ssn) {
         this.fname = fname;

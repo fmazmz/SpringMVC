@@ -40,6 +40,7 @@
 
             <td sec:authorize="hasRole('ADMIN')">
                 <form th:action="@{/drivers/{id}/delete(id=${d.id})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <button type="submit">Delete</button>
                 </form>
             </td>

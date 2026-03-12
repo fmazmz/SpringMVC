@@ -103,6 +103,13 @@ public class DriverServiceImpl implements DriverService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ErrorMessages.DRIVER_NOT_FOUND_ID, driverId)
                 ));
+
+        User user = driver.getUser();
+        if (user != null) {
+            user.setDriver(null);
+            user.setRole(UserRole.APP_USER);
+        }
+
         driverRepository.delete(driver);
     }
 
