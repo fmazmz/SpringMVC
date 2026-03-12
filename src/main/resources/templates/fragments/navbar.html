@@ -24,8 +24,8 @@
         <div class="dropdown" sec:authorize="hasAnyRole('ADMIN','DRIVER')">
             <button class="dropbtn">BOOKINGS ▼</button>
             <div class="dropdown-content">
-                <a th:href="@{/bookings/new}">Book a Car</a>
-                <a th:href="@{/bookings/my-bookings}">My bookings</a>
+                <a th:href="@{/bookings/new}" sec:authorize="hasRole('DRIVER')">Book a Car</a>
+                <a th:href="@{/bookings/my-bookings}" sec:authorize="hasRole('DRIVER')">My bookings</a>
                 <a th:href="@{/bookings}" sec:authorize="hasRole('ADMIN')">Bookings</a>
             </div>
         </div>
@@ -37,7 +37,8 @@
             </div>
         </div>
 
-        <a th:href="@{/drivers/new}" sec:authorize="hasAnyRole('APP_USER','ADMIN')">Become a Driver</a>
+        <a th:href="@{/drivers/new}"
+           sec:authorize="hasRole('APP_USER')">Become a Driver</a>
 
         <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
