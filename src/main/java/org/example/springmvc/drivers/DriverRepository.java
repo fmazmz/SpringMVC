@@ -17,11 +17,19 @@ public interface DriverRepository extends ListCrudRepository<Driver, UUID> {
     Optional<Driver> findBySsn(String ssn);
 
     @Query("""
-        SELECT d FROM Driver d WHERE (
+        SELECT d FROM Driver d
+        WHERE (
             :q IS NULL OR
-            LOWER(d.fname) LIKE :q OR
-            LOWER(d.lname) LIKE :q OR
-            LOWER(d.ssn) LIKE :q
+            (
+                :searchIn = 'all' AND (
+                    LOWER(d.fname) LIKE :q OR
+                    LOWER(d.lname) LIKE :q OR
+                    LOWER(d.ssn) LIKE :q
+                )
+            ) OR
+            (:searchIn = 'fname' AND LOWER(d.fname) LIKE :q) OR
+            (:searchIn = 'lname' AND LOWER(d.lname) LIKE :q) OR
+            (:searchIn = 'ssn' AND LOWER(d.ssn) LIKE :q)
         )
         AND (:fname IS NULL OR LOWER(d.fname) LIKE :fname)
         AND (:lname IS NULL OR LOWER(d.lname) LIKE :lname)
@@ -30,6 +38,7 @@ public interface DriverRepository extends ListCrudRepository<Driver, UUID> {
     """)
     Page<Driver> searchDrivers(
             String q,
+            String searchIn,
             String fname,
             String lname,
             String ssn,
