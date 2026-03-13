@@ -5,5 +5,6 @@ public record DriverFilter(
         String fname,
         String lname,
         String ssn,
-        String driverId
+        String driverId,
+        String searchIn
 ) {}

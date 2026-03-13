@@ -5,12 +5,98 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/tables.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/forms.css}"/>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="page-header">
     <h2>Drivers</h2>
+</div>
+
+<div class="form-container-simple">
+    <form class="form-simple" th:action="@{/drivers}" method="get" id="filterForm">
+
+        <div class="form-field-simple">
+            <label for="q">Search</label>
+            <div class="form-field-input">
+                <input type="text" id="q" name="q" th:value="${filter.q}" placeholder="Search...">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="searchIn">Search In</label>
+            <div class="form-field-input">
+                <select id="searchIn" name="searchIn">
+                    <option value="all" th:selected="${filter.searchIn == null or filter.searchIn == 'all'}">All Fields</option>
+                    <option value="fname" th:selected="${filter.searchIn == 'fname'}">First Name</option>
+                    <option value="lname" th:selected="${filter.searchIn == 'lname'}">Last Name</option>
+                    <option value="ssn" th:selected="${filter.searchIn == 'ssn'}">SSN</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="fname">First Name</label>
+            <div class="form-field-input">
+                <input type="text" id="fname" name="fname" th:value="${filter.fname}">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="lname">Last Name</label>
+            <div class="form-field-input">
+                <input type="text" id="lname" name="lname" th:value="${filter.lname}">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="ssn">SSN</label>
+            <div class="form-field-input">
+                <input type="text" id="ssn" name="ssn" th:value="${filter.ssn}">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="driverId">Driver ID</label>
+            <div class="form-field-input">
+                <input type="text" id="driverId" name="driverId" th:value="${filter.driverId}">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="sort">Sort By</label>
+            <div class="form-field-input">
+                <select id="sort" name="sort">
+                    <option value="fname,asc" th:selected="${param.sort == null or #lists.contains(param.sort, 'fname,asc')}">First Name A-Z</option>
+                    <option value="fname,desc" th:selected="${param.sort != null and #lists.contains(param.sort, 'fname,desc')}">First Name Z-A</option>
+                    <option value="lname,asc" th:selected="${param.sort != null and #lists.contains(param.sort, 'lname,asc')}">Last Name A-Z</option>
+                    <option value="lname,desc" th:selected="${param.sort != null and #lists.contains(param.sort, 'lname,desc')}">Last Name Z-A</option>
+                    <option value="ssn,asc" th:selected="${param.sort != null and #lists.contains(param.sort, 'ssn,asc')}">SSN Asc</option>
+                    <option value="ssn,desc" th:selected="${param.sort != null and #lists.contains(param.sort, 'ssn,desc')}">SSN Desc</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="size">Page Size</label>
+            <div class="form-field-input">
+                <select id="size" name="size">
+                    <option value="5" th:selected="${param.size == null or #lists.contains(param.size, '5')}">5</option>
+                    <option value="10" th:selected="${param.size != null and #lists.contains(param.size, '10')}">10</option>
+                    <option value="20" th:selected="${param.size != null and #lists.contains(param.size, '20')}">20</option>
+                    <option value="50" th:selected="${param.size != null and #lists.contains(param.size, '50')}">50</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="button-container-simple">
+            <button type="submit">Filter</button>
+            <a th:href="@{/drivers}">
+                <button type="button">Clear</button>
+            </a>
+        </div>
+    </form>
 </div>
 
 <div class="list-container">
@@ -45,14 +131,26 @@
                 </form>
             </td>
         </tr>
+
+        <tr th:if="${drivers.content.isEmpty()}">
+            <td colspan="6">No drivers found.</td>
+        </tr>
         </tbody>
     </table>
 </div>
 
 <div class="pagination">
-
     <a th:if="${drivers.hasPrevious()}"
-       th:href="@{/drivers(page=${drivers.number-1}, q=${param.q}, fname=${param.fname}, lname=${param.lname}, ssn=${param.ssn}, driverId=${param.driverId}, sort=${param.sort})}">
+       th:href="@{/drivers(
+            page=${drivers.number-1},
+            size=${param.size},
+            q=${filter.q},
+            searchIn=${filter.searchIn},
+            fname=${filter.fname},
+            lname=${filter.lname},
+            ssn=${filter.ssn},
+            driverId=${filter.driverId},
+            sort=${param.sort})}">
         Previous
     </a>
 
@@ -62,15 +160,46 @@
     </span>
 
     <a th:if="${drivers.hasNext()}"
-       th:href="@{/drivers(page=${drivers.number+1}, q=${param.q}, fname=${param.fname}, lname=${param.lname}, ssn=${param.ssn}, driverId=${param.driverId}, sort=${param.sort})}">
+       th:href="@{/drivers(
+            page=${drivers.number+1},
+            size=${param.size},
+            q=${filter.q},
+            searchIn=${filter.searchIn},
+            fname=${filter.fname},
+            lname=${filter.lname},
+            ssn=${filter.ssn},
+            driverId=${filter.driverId},
+            sort=${param.sort})}">
         Next
     </a>
-
 </div>
 
 <div th:if="${success}" class="success-message">
     <span th:text="${success}"></span>
 </div>
+
+<script>
+    const filterForm = document.getElementById('filterForm');
+    const textInputs = filterForm.querySelectorAll('input[type="text"]');
+    const selects = filterForm.querySelectorAll('select');
+
+    let timeout;
+
+    textInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                filterForm.submit();
+            }, 500);
+        });
+    });
+
+    selects.forEach(select => {
+        select.addEventListener('change', () => {
+            filterForm.submit();
+        });
+    });
+</script>
 
 </body>
 </html>

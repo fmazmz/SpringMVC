@@ -116,13 +116,17 @@ public class DriverServiceImpl implements DriverService {
     @Override
     @Transactional(readOnly = true)
     public Page<DriverDTO> search(Pageable pageable, DriverFilter filter) {
-        UUID driverId = null;
-        if (filter.driverId() != null && !filter.driverId().isBlank()) {
-            driverId = UUID.fromString(filter.driverId());
+        UUID driverId = parseDriverId(filter.driverId());
+
+        if (filter.driverId() != null && !filter.driverId().isBlank() && driverId == null) {
+            return Page.empty(pageable);
         }
+
+        String searchIn = normalizeSearchIn(filter.searchIn());
 
         return driverRepository.searchDrivers(
                 wildcard(filter.q()),
+                searchIn,
                 wildcard(filter.fname()),
                 wildcard(filter.lname()),
                 wildcard(filter.ssn()),
@@ -132,7 +136,32 @@ public class DriverServiceImpl implements DriverService {
     }
 
     private String wildcard(String value) {
-        if (value == null || value.isBlank()) return null;
+        if (value == null || value.isBlank()) {
+            return null;
+        }
         return "%" + value.trim().toLowerCase() + "%";
+    }
+
+    private UUID parseDriverId(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return UUID.fromString(value.trim());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private String normalizeSearchIn(String searchIn) {
+        if (searchIn == null || searchIn.isBlank()) {
+            return "all";
+        }
+
+        return switch (searchIn.toLowerCase()) {
+            case "fname", "lname", "ssn" -> searchIn.toLowerCase();
+            default -> "all";
+        };
     }
 }
