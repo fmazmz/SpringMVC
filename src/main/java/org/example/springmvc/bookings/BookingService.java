@@ -3,7 +3,6 @@ package org.example.springmvc.bookings;
 import org.example.springmvc.bookings.dto.BookingDTO;
 import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.dto.UpdateBookingDTO;
-import org.example.springmvc.bookings.model.BookingFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

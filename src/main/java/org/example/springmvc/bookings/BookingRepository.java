@@ -32,11 +32,17 @@ public interface BookingRepository extends ListCrudRepository<Booking, UUID> {
 
     @Query("""
     SELECT b FROM Booking b
-    WHERE (:carId IS NULL OR b.car.id = :carId)
+    WHERE (
+        :q IS NULL OR
+        LOWER(b.car.make) LIKE :q OR
+        LOWER(b.car.model) LIKE :q
+    )
+      AND (:carId IS NULL OR b.car.id = :carId)
       AND (:driverId IS NULL OR b.driver.id = :driverId)
       AND (:insuranceType IS NULL OR b.insuranceType = :insuranceType)
     """)
     Page<Booking> searchBookings(
+            @Param("q") String q,
             @Param("carId") UUID carId,
             @Param("driverId") UUID driverId,
             @Param("insuranceType") InsuranceType insuranceType,

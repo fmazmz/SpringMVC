@@ -1,10 +1,11 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>All Bookings - Fleetify</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/tables.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/forms.css}"/>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -15,6 +16,121 @@
 
 <div th:if="${success}" class="success-message">
     <span th:text="${success}"></span>
+</div>
+
+<div th:if="${error}" class="error-message">
+    <span th:text="${error}"></span>
+</div>
+
+<div class="form-container-simple">
+    <form class="form-simple" th:action="@{/bookings}" method="get" id="filterForm">
+
+        <div class="form-field-simple">
+            <label for="q">Search</label>
+            <div class="form-field-input">
+                <input type="text"
+                       id="q"
+                       name="q"
+                       th:value="${filter.q}"
+                       placeholder="Search by car make or model">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="driverId">Driver ID</label>
+            <div class="form-field-input">
+                <input type="text"
+                       id="driverId"
+                       name="driverId"
+                       th:value="${filter.driverId}"
+                       placeholder="Driver UUID">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="carId">Car ID</label>
+            <div class="form-field-input">
+                <input type="text"
+                       id="carId"
+                       name="carId"
+                       th:value="${filter.carId}"
+                       placeholder="Car UUID">
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="insuranceType">Insurance</label>
+            <div class="form-field-input">
+                <select id="insuranceType" name="insuranceType">
+                    <option value="">All</option>
+                    <option th:each="type : ${insuranceTypes}"
+                            th:value="${type.name()}"
+                            th:text="${type.name()}"
+                            th:selected="${filter.insuranceType == type.name()}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="sort">Sort By</label>
+            <div class="form-field-input">
+                <select id="sort" name="sort">
+                    <option value="startTime,desc"
+                            th:selected="${param.sort == null or #lists.contains(param.sort, 'startTime,desc')}">
+                        Start Time ↓
+                    </option>
+                    <option value="startTime,asc"
+                            th:selected="${param.sort != null and #lists.contains(param.sort, 'startTime,asc')}">
+                        Start Time ↑
+                    </option>
+                    <option value="endTime,desc"
+                            th:selected="${param.sort != null and #lists.contains(param.sort, 'endTime,desc')}">
+                        End Time ↓
+                    </option>
+                    <option value="endTime,asc"
+                            th:selected="${param.sort != null and #lists.contains(param.sort, 'endTime,asc')}">
+                        End Time ↑
+                    </option>
+                    <option value="totalPrice,desc"
+                            th:selected="${param.sort != null and #lists.contains(param.sort, 'totalPrice,desc')}">
+                        Price ↓
+                    </option>
+                    <option value="totalPrice,asc"
+                            th:selected="${param.sort != null and #lists.contains(param.sort, 'totalPrice,asc')}">
+                        Price ↑
+                    </option>
+                    <option value="insuranceType,asc"
+                            th:selected="${param.sort != null and #lists.contains(param.sort, 'insuranceType,asc')}">
+                        Insurance A-Z
+                    </option>
+                    <option value="insuranceType,desc"
+                            th:selected="${param.sort != null and #lists.contains(param.sort, 'insuranceType,desc')}">
+                        Insurance Z-A
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-field-simple">
+            <label for="size">Page Size</label>
+            <div class="form-field-input">
+                <select id="size" name="size">
+                    <option value="5" th:selected="${param.size == null or #lists.contains(param.size, '5')}">5</option>
+                    <option value="10" th:selected="${param.size != null and #lists.contains(param.size, '10')}">10</option>
+                    <option value="20" th:selected="${param.size != null and #lists.contains(param.size, '20')}">20</option>
+                    <option value="50" th:selected="${param.size != null and #lists.contains(param.size, '50')}">50</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="button-container-simple">
+            <button type="submit">Filter</button>
+            <a th:href="@{/bookings}">
+                <button type="button">Clear</button>
+            </a>
+        </div>
+    </form>
 </div>
 
 <div class="list-container">
@@ -28,7 +144,7 @@
             <th>Insurance</th>
             <th>Total Price</th>
             <th>View</th>
-            <th>Update</th>
+            <th sec:authorize="hasRole('ADMIN')">Update</th>
             <th>Cancel</th>
         </tr>
         </thead>
@@ -40,16 +156,19 @@
             <td th:text="${#temporals.format(b.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, HH:mm')}">End</td>
             <td th:text="${b.insuranceType}">Insurance</td>
             <td th:text="${'$' + #numbers.formatDecimal(b.totalPrice, 1, 2)}">Price</td>
+
             <td>
                 <a th:href="@{/bookings/{id}(id=${b.id})}">
                     <button type="button">View</button>
                 </a>
             </td>
-            <td>
-                <a th:href="@{/bookings/{id}/update(id=${b.id})}" sec:authorize="hasRole('ADMIN')">
+
+            <td sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/bookings/{id}/update(id=${b.id})}">
                     <button type="button" style="background: rgba(255, 255, 255, 0.15);">Update</button>
                 </a>
             </td>
+
             <td>
                 <form th:action="@{/bookings/{id}/delete(id=${b.id})}" method="post" style="display: inline;">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -59,20 +178,66 @@
                 </form>
             </td>
         </tr>
+
+        <tr th:if="${bookings.content.isEmpty()}">
+            <td colspan="9">No bookings found.</td>
+        </tr>
         </tbody>
     </table>
 
     <div class="pagination" th:if="${bookings.totalPages > 1}">
         <a th:if="${bookings.hasPrevious()}"
-           th:href="@{/bookings(page=${bookings.number-1})}">
+           th:href="@{/bookings(
+                page=${bookings.number-1},
+                size=${param.size},
+                q=${filter.q},
+                carId=${filter.carId},
+                driverId=${filter.driverId},
+                insuranceType=${filter.insuranceType},
+                sort=${param.sort})}">
             ← Previous
         </a>
-        <span>Page <span th:text="${bookings.number + 1}"></span> of <span th:text="${bookings.totalPages}"></span></span>
+
+        <span>
+            Page <span th:text="${bookings.number + 1}"></span>
+            of <span th:text="${bookings.totalPages}"></span>
+        </span>
+
         <a th:if="${bookings.hasNext()}"
-           th:href="@{/bookings(page=${bookings.number+1})}">
+           th:href="@{/bookings(
+                page=${bookings.number+1},
+                size=${param.size},
+                q=${filter.q},
+                carId=${filter.carId},
+                driverId=${filter.driverId},
+                insuranceType=${filter.insuranceType},
+                sort=${param.sort})}">
             Next →
         </a>
     </div>
 </div>
+
+<script>
+    const filterForm = document.getElementById('filterForm');
+    const textInputs = filterForm.querySelectorAll('input[type="text"]');
+    const selects = filterForm.querySelectorAll('select');
+
+    let timeout;
+
+    textInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                filterForm.submit();
+            }, 500);
+        });
+    });
+
+    selects.forEach(select => {
+        select.addEventListener('change', () => {
+            filterForm.submit();
+        });
+    });
+</script>
 </body>
 </html>

@@ -4,13 +4,13 @@ import org.example.springmvc.bookings.dto.BookingDTO;
 import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.dto.UpdateBookingDTO;
 import org.example.springmvc.bookings.model.Booking;
-import org.example.springmvc.bookings.model.BookingFilter;
 import org.example.springmvc.cars.CarRepository;
 import org.example.springmvc.cars.model.Car;
 import org.example.springmvc.drivers.DriverRepository;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.exceptions.*;
 import org.example.springmvc.insurances.CarInsurance;
+import org.example.springmvc.insurances.InsuranceType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,10 +45,27 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Page<BookingDTO> search(Pageable pageable, BookingFilter filter) {
+        UUID carId = parseUuid(filter.carId());
+        UUID driverId = parseUuid(filter.driverId());
+        InsuranceType insuranceType = parseInsuranceType(filter.insuranceType());
+
+        if (filter.carId() != null && !filter.carId().isBlank() && carId == null) {
+            return Page.empty(pageable);
+        }
+
+        if (filter.driverId() != null && !filter.driverId().isBlank() && driverId == null) {
+            return Page.empty(pageable);
+        }
+
+        if (filter.insuranceType() != null && !filter.insuranceType().isBlank() && insuranceType == null) {
+            return Page.empty(pageable);
+        }
+
         return repository.searchBookings(
-                filter.carId(),
-                filter.driverId(),
-                filter.insuranceType(),
+                wildcard(filter.q()),
+                carId,
+                driverId,
+                insuranceType,
                 pageable
         ).map(BookingMapper::toDto);
     }
@@ -141,6 +158,37 @@ public class BookingServiceImpl implements BookingService {
                 .map(BookingMapper::toDto);
     }
 
+    private String wildcard(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return "%" + value.trim().toLowerCase() + "%";
+    }
+
+    private UUID parseUuid(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return UUID.fromString(value.trim());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private InsuranceType parseInsuranceType(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return InsuranceType.valueOf(value.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
     private Booking findBookingById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -178,7 +226,7 @@ public class BookingServiceImpl implements BookingService {
             Car car,
             Instant startTime,
             Instant endTime,
-            org.example.springmvc.insurances.InsuranceType insuranceType
+            InsuranceType insuranceType
     ) {
         long hours = Duration.between(startTime, endTime).toHours();
         BigDecimal carCost = car.getHourlyPrice().multiply(BigDecimal.valueOf(hours));

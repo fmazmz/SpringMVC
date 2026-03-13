@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.example.springmvc.bookings.dto.BookingDTO;
 import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.dto.UpdateBookingDTO;
-import org.example.springmvc.bookings.model.BookingFilter;
 import org.example.springmvc.cars.CarService;
 import org.example.springmvc.cars.dto.CarDTO;
 import org.example.springmvc.drivers.DriverService;
@@ -54,7 +53,7 @@ public class BookingController {
 
     @GetMapping
     public String list(
-            @PageableDefault(value = 5) Pageable pageable,
+            @PageableDefault(size = 5, sort = "startTime", direction = org.springframework.data.domain.Sort.Direction.DESC) Pageable pageable,
             @ModelAttribute BookingFilter filter,
             Model model
     ) {
@@ -62,6 +61,7 @@ public class BookingController {
 
         model.addAttribute("bookings", bookings);
         model.addAttribute("filter", filter);
+        model.addAttribute("insuranceTypes", InsuranceType.values());
 
         return "bookings/list";
     }
