@@ -22,7 +22,10 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/signup/**", "/images/**", "/css/**").permitAll()
 
                         .requestMatchers("/cars/new").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/cars").hasAnyRole("ADMIN", "DRIVER", "APP_USER")
+                        .requestMatchers(HttpMethod.GET, "/cars", "/cars/*").hasAnyRole("ADMIN", "DRIVER", "APP_USER")
+                        .requestMatchers(HttpMethod.GET, "/cars/*/update").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/cars/*/update").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/cars/*/delete").hasRole("ADMIN")
                         .requestMatchers("/cars/**").hasRole("ADMIN")
 
                         .requestMatchers("/drivers/new").hasRole("APP_USER")

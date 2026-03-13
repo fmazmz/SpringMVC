@@ -28,7 +28,7 @@ public class CarController {
 
     @GetMapping
     public String list(
-            @PageableDefault(sort = "make", direction = Sort.Direction.ASC) Pageable pageable,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @ModelAttribute CarFilter filter,
             Model model
     ) {
@@ -60,11 +60,10 @@ public class CarController {
             return "cars/create";
         }
 
-        CarDTO createdCar = carService.create(car);
-
+        carService.create(car);
         redirectAttributes.addFlashAttribute("success", "Car created");
 
-        return "redirect:/cars/" + createdCar.id();
+        return "redirect:/cars";
     }
 
     @GetMapping("{id}")
