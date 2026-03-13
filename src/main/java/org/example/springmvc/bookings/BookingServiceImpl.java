@@ -18,11 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
 @Transactional
 public class BookingServiceImpl implements BookingService {
+
     private final BookingRepository repository;
     private final CarRepository carRepository;
     private final DriverRepository driverRepository;
@@ -54,114 +56,134 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public BookingDTO getById(UUID id) {
-        Booking booking = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.BOOKING_NOT_FOUND_ID, id)
-                ));
-        return BookingMapper.toDto(booking);
+        return BookingMapper.toDto(findBookingById(id));
     }
 
     @Override
     public void create(CreateBookingDTO dto) {
-        Car car = carRepository.findById(dto.carId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.CAR_NOT_FOUND_ID, dto.carId())
-                ));
+        Car car = findCarById(dto.carId());
+        Driver driver = findDriverById(dto.driverId());
 
-        Driver driver = driverRepository.findById(dto.driverId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.DRIVER_NOT_FOUND_ID, dto.driverId())
-                ));
+        validateBookingTime(dto.startTime(), dto.endTime());
 
-        if (!dto.startTime().isBefore(dto.endTime())) {
-            throw new InvalidBookingTimeException(ErrorMessages.INVALID_BOOKING_TIME);
-        }
-
-        if (repository.existsOverlappingBooking(car.getId(), dto.startTime(), dto.endTime())) {
+        if (repository.existsOverlappingBooking(
+                car.getId(),
+                dto.startTime(),
+                dto.endTime()
+        )) {
             throw new DuplicateEntityException(ErrorMessages.BOOKING_DUPLICATE);
         }
 
-        long hours = Duration.between(dto.startTime(), dto.endTime()).toHours();
-        BigDecimal carCost = car.getHourlyPrice().multiply(BigDecimal.valueOf(hours));
-        BigDecimal insuranceCost = insurance.getPrice(dto.insuranceType());
-        BigDecimal total = carCost.add(insuranceCost);
-        Booking booking = BookingMapper.fromDto(dto, car, driver, total);
+        BigDecimal totalPrice = calculateTotalPrice(
+                car,
+                dto.startTime(),
+                dto.endTime(),
+                dto.insuranceType()
+        );
 
+        Booking booking = BookingMapper.fromDto(dto, car, driver, totalPrice);
         repository.save(booking);
     }
 
     @Override
     public void update(UUID id, UpdateBookingDTO dto) {
-        Booking booking = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.BOOKING_NOT_FOUND_ID, id)
-                ));
+        Booking booking = findBookingById(id);
+        Car car = findCarById(dto.carId());
+        Driver driver = findDriverById(dto.driverId());
 
-        Car car = carRepository.findById(dto.carId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.CAR_NOT_FOUND_ID, dto.carId())
-                ));
+        validateBookingTime(dto.startTime(), dto.endTime());
 
-        Driver driver = driverRepository.findById(dto.driverId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.DRIVER_NOT_FOUND_ID, dto.driverId())
-                ));
+        boolean bookingWindowChanged =
+                !booking.getStartTime().equals(dto.startTime())
+                        || !booking.getEndTime().equals(dto.endTime())
+                        || !booking.getCar().getId().equals(dto.carId());
 
-        if (!dto.startTime().isBefore(dto.endTime())) {
-            throw new InvalidBookingTimeException(ErrorMessages.INVALID_BOOKING_TIME);
+        if (bookingWindowChanged && repository.existsOverlappingBookingExcludingId(
+                car.getId(),
+                dto.startTime(),
+                dto.endTime(),
+                id
+        )) {
+            throw new DuplicateEntityException(ErrorMessages.BOOKING_DUPLICATE);
         }
 
-        if (!booking.getStartTime().equals(dto.startTime()) ||
-                !booking.getEndTime().equals(dto.endTime()) ||
-                !booking.getCar().getId().equals(dto.carId())) {
+        BigDecimal totalPrice = calculateTotalPrice(
+                car,
+                dto.startTime(),
+                dto.endTime(),
+                dto.insuranceType()
+        );
 
-            if (repository.existsOverlappingBookingExcludingId(
-                    car.getId(),
-                    dto.startTime(),
-                    dto.endTime(),
-                    id)) {
-                throw new DuplicateEntityException(ErrorMessages.BOOKING_DUPLICATE);
-            }
-        }
-
-        long hours = Duration.between(dto.startTime(), dto.endTime()).toHours();
-        if (hours <= 0) {
-            throw new InvalidBookingTimeException("Booking duration must be at least 1 hour");
-        }
-
-        BigDecimal carCost = car.getHourlyPrice().multiply(BigDecimal.valueOf(hours));
-        BigDecimal insuranceCost = insurance.getPrice(dto.insuranceType());
-        BigDecimal total = carCost.add(insuranceCost);
-
-        BookingMapper.updateEntity(booking, car, driver, dto, total);
+        BookingMapper.updateEntity(booking, car, driver, dto, totalPrice);
     }
 
     @Override
     public void delete(UUID id) {
-        Booking booking = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.BOOKING_NOT_FOUND_ID, id)
-                ));
+        Booking booking = findBookingById(id);
         repository.delete(booking);
     }
 
     @Override
     public void deleteByDriver(UUID bookingId, UUID driverId) {
-        Booking booking = repository.findById(bookingId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ErrorMessages.BOOKING_NOT_FOUND_ID, bookingId)
-                ));
-        
+        Booking booking = findBookingById(bookingId);
+
         if (!booking.getDriver().getId().equals(driverId)) {
             throw new UnauthorizedActionException(ErrorMessages.UNAUTHORIZED_BOOKING_ACTION);
         }
-        
+
         repository.delete(booking);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<BookingDTO> getDriverBookings(UUID driverId, Pageable pageable) {
         return repository.findByDriverId(driverId, pageable)
                 .map(BookingMapper::toDto);
+    }
+
+    private Booking findBookingById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(ErrorMessages.BOOKING_NOT_FOUND_ID, id)
+                ));
+    }
+
+    private Car findCarById(UUID id) {
+        return carRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(ErrorMessages.CAR_NOT_FOUND_ID, id)
+                ));
+    }
+
+    private Driver findDriverById(UUID id) {
+        return driverRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(ErrorMessages.DRIVER_NOT_FOUND_ID, id)
+                ));
+    }
+
+    private void validateBookingTime(Instant startTime, Instant endTime) {
+        if (!startTime.isBefore(endTime)) {
+            throw new InvalidBookingTimeException(ErrorMessages.INVALID_BOOKING_TIME);
+        }
+
+        Duration duration = Duration.between(startTime, endTime);
+
+        if (duration.toMinutes() < 60) {
+            throw new InvalidBookingTimeException("Booking duration must be at least 1 hour");
+        }
+    }
+
+    private BigDecimal calculateTotalPrice(
+            Car car,
+            Instant startTime,
+            Instant endTime,
+            org.example.springmvc.insurances.InsuranceType insuranceType
+    ) {
+        long hours = Duration.between(startTime, endTime).toHours();
+        BigDecimal carCost = car.getHourlyPrice().multiply(BigDecimal.valueOf(hours));
+        BigDecimal insuranceCost = insurance.getPrice(insuranceType);
+
+        return carCost.add(insuranceCost);
     }
 }

@@ -19,6 +19,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class Booking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

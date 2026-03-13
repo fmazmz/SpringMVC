@@ -21,11 +21,14 @@ public interface BookingRepository extends ListCrudRepository<Booking, UUID> {
     SELECT COUNT(b) > 0
     FROM Booking b
     WHERE b.car.id = :carId
-    AND b.startTime < :endTime
-    AND b.endTime > :startTime
+      AND b.startTime < :endTime
+      AND b.endTime > :startTime
     """)
-    boolean existsOverlappingBooking(UUID carId, Instant startTime, Instant endTime);
-
+    boolean existsOverlappingBooking(
+            @Param("carId") UUID carId,
+            @Param("startTime") Instant startTime,
+            @Param("endTime") Instant endTime
+    );
 
     @Query("""
     SELECT b FROM Booking b
@@ -41,13 +44,12 @@ public interface BookingRepository extends ListCrudRepository<Booking, UUID> {
     );
 
     @Query("""
-    SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END 
-    FROM Booking b 
-    WHERE b.car.id = :carId 
-    AND b.id != :excludeId
-    AND (
-        (b.startTime <= :endTime AND b.endTime >= :startTime)
-    )
+    SELECT COUNT(b) > 0
+    FROM Booking b
+    WHERE b.car.id = :carId
+      AND b.id <> :excludeId
+      AND b.startTime < :endTime
+      AND b.endTime > :startTime
     """)
     boolean existsOverlappingBookingExcludingId(
             @Param("carId") UUID carId,

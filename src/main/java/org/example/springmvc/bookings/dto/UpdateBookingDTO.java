@@ -8,9 +8,18 @@ import java.util.UUID;
 
 public record UpdateBookingDTO(
 
-        @NotNull UUID carId,
-        @NotNull UUID driverId,
-        @NotNull Instant startTime,
-        @NotNull Instant endTime,
-        @NotNull InsuranceType insuranceType
+        @NotNull
+        UUID carId,
+
+        @NotNull
+        UUID driverId,
+
+        @NotNull
+        Instant startTime,
+
+        @NotNull
+        Instant endTime,
+
+        @NotNull
+        InsuranceType insuranceType
 ) {}

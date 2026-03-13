@@ -25,12 +25,18 @@
 
             <div class="detail-row">
                 <span class="detail-label">Start Time:</span>
-                <span class="detail-value" th:text="${#temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">Start</span>
+                <span class="detail-value"
+                      th:text="${#temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">
+                    Start
+                </span>
             </div>
 
             <div class="detail-row">
                 <span class="detail-label">End Time:</span>
-                <span class="detail-value" th:text="${#temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">End</span>
+                <span class="detail-value"
+                      th:text="${#temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">
+                    End
+                </span>
             </div>
 
             <div class="detail-row">
@@ -40,13 +46,24 @@
 
             <div class="detail-row">
                 <span class="detail-label">Total Price:</span>
-                <span class="detail-value price" th:text="${'$' + #numbers.formatDecimal(booking.totalPrice, 1, 2)}">Price</span>
+                <span class="detail-value price"
+                      th:text="${'$' + #numbers.formatDecimal(booking.totalPrice, 1, 2)}">
+                    Price
+                </span>
             </div>
         </div>
 
         <div style="text-align: center; margin-top: 30px;">
-            <a th:href="@{/bookings}">
-                <button class="btn-secondary">← Back to Bookings</button>
+            <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+               th:href="@{/bookings}"
+               class="btn-secondary">
+                ← Back to Bookings
+            </a>
+
+            <a th:if="${#authorization.expression('hasRole(''DRIVER'')')}"
+               th:href="@{/bookings/my-bookings}"
+               class="btn-secondary">
+                ← Back to My Bookings
             </a>
         </div>
 
