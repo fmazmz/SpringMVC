@@ -57,13 +57,13 @@
             <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
                th:href="@{/bookings}"
                class="btn-secondary">
-                ← Back to Bookings
+                Back to Bookings
             </a>
 
             <a th:if="${#authorization.expression('hasRole(''DRIVER'')')}"
                th:href="@{/bookings/my-bookings}"
                class="btn-secondary">
-                ← Back to My Bookings
+                Back to My Bookings
             </a>
         </div>
 
