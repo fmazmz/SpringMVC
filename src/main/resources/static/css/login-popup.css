@@ -1,4 +1,3 @@
-/* login-popup.css */
 .login-popup {
     position: fixed;
     top: 0;
@@ -132,7 +131,6 @@
     text-decoration: underline;
 }
 
-/* Optional: Glass morphism effect for more transparency */
 .glass-effect .popup-content {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(15px);

@@ -1,7 +1,9 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+
 <body>
 
 <div th:fragment="navbar" class="navbar" style="position: relative; z-index: 1000;">
@@ -13,35 +15,58 @@
     </div>
 
     <div class="navbar-right">
+
         <div class="dropdown" sec:authorize="hasAnyRole('ADMIN','APP_USER','DRIVER')">
             <button class="dropbtn">CARS ▼</button>
+
             <div class="dropdown-content">
-                <a th:href="@{/cars}">Browse Cars</a>
-                <a th:href="@{/cars/new}" sec:authorize="hasRole('ADMIN')">Add New Car</a>
+                <a th:href="@{/cars/browse}">Browse Cars</a>
+
+                <a th:href="@{/cars/new}"
+                   sec:authorize="hasRole('ADMIN')">
+                    Create Car
+                </a>
             </div>
         </div>
 
         <div class="dropdown" sec:authorize="hasAnyRole('ADMIN','DRIVER')">
             <button class="dropbtn">BOOKINGS ▼</button>
+
             <div class="dropdown-content">
-                <a th:href="@{/bookings/new}" sec:authorize="hasRole('DRIVER')">Book a Car</a>
-                <a th:href="@{/bookings/my-bookings}" sec:authorize="hasRole('DRIVER')">My bookings</a>
-                <a th:href="@{/bookings}" sec:authorize="hasRole('ADMIN')">Bookings</a>
+                <a th:href="@{/bookings/new}"
+                   sec:authorize="hasRole('DRIVER')">
+                    Book a Car
+                </a>
+
+                <a th:href="@{/bookings/my-bookings}"
+                   sec:authorize="hasRole('DRIVER')">
+                    My Bookings
+                </a>
+
+                <a th:href="@{/bookings}"
+                   sec:authorize="hasRole('ADMIN')">
+                    Manage Bookings
+                </a>
             </div>
         </div>
 
         <div class="dropdown" sec:authorize="hasRole('ADMIN')">
             <button class="dropbtn">DRIVERS ▼</button>
+
             <div class="dropdown-content">
-                <a th:href="@{/drivers}">Drivers</a>
+                <a th:href="@{/drivers}">View Drivers</a>
             </div>
         </div>
 
         <a th:href="@{/drivers/new}"
-           sec:authorize="hasRole('APP_USER')">Become a Driver</a>
+           sec:authorize="hasRole('APP_USER')">
+            Become a Driver
+        </a>
 
         <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}" />
             <button type="submit">Logout</button>
         </form>
 

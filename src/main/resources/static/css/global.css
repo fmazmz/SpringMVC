@@ -1,25 +1,363 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&display=swap");
 
-html {
-    font-family: 'IBM Plex Mono', monospace;
-    overflow-x: hidden;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.error-message {
-    background-color: #fee;
-    border: 1px solid #fcc;
-    color: #c33;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
+html, body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+body {
+    min-height: 100vh;
+    background-image: url('/images/CarBackground.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding-top: 16px;
+    color: white;
+}
+
+body.home-page {
+    background: none;
+    position: relative;
+}
+
+.home-background {
+    position: fixed;
+    inset: 0;
+    background-image: url('/images/FrontPic.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+h2 {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    margin: 0;
+}
+
+.page-shell {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 18px 0 10px;
     text-align: center;
+}
+
+.page-header h2 {
+    color: white;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1000px;
+    margin: 16px auto 0;
+    padding: 0 16px;
+}
+
+.content-card,
+.bookings-card {
+    background: rgba(20, 20, 20, 0.65);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.filter-section {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 20px;
+}
+
+.filter-box {
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 10px;
+    padding: 15px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 15px;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1 1 160px;
+    min-width: 140px;
+}
+
+.filter-group label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 3px;
+}
+
+.filter-group input,
+.filter-group select {
+    width: 100%;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.filter-group select option {
+    background: #1a1a1a;
+    color: white;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-left: auto;
+    align-items: center;
+}
+
+.btn {
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
     font-size: 13px;
 }
 
+.btn-danger {
+    background: rgba(255, 80, 80, 0.2);
+    border-color: rgba(255, 80, 80, 0.3);
+    color: #ffb3b3;
+}
+
+.btn-danger:hover {
+    background: rgba(255, 80, 80, 0.3);
+    border-color: rgba(255, 80, 80, 0.5);
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 10px;
+}
+
+.btn-nav {
+    padding: 7px 12px;
+    font-size: 0.9em;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-nav:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-container {
+    max-width: 520px;
+    margin: 20px auto;
+    padding: 0 12px;
+}
+
+.form-card {
+    background: rgba(10, 10, 10, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 24px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.form-row {
+    margin-bottom: 16px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.form-row input[readonly] {
+    background: rgba(255, 255, 255, 0.03);
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
 .field-error {
-    color: #c33;
-    font-size: 0.85em;
-    margin-left: 10px;
+    color: #ffb3b3;
+    font-size: 10px;
+    margin-top: 4px;
+    display: block;
+    background: rgba(255, 80, 80, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border-left: 2px solid rgba(255, 80, 80, 0.5);
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin: 16px 0;
+    border-radius: 12px;
+}
+
+.table-card {
+    width: 100%;
+    background: rgba(15, 15, 15, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+    font-size: 12px;
+}
+
+.data-table th {
+    padding: 12px 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.9);
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table td form {
+    margin: 0;
+    display: inline-block;
+}
+
+.data-table .btn {
+    min-width: 60px;
 }
 
 .navbar {
@@ -27,11 +365,10 @@ html {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background: rgba(20, 20, 20, 0.65);
+    background: rgba(20, 20, 20, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 12px;
-    gap: 12px;
     margin: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -43,15 +380,10 @@ html {
     margin: 0;
     color: white;
     font-weight: 500;
-    letter-spacing: 0.5px;
     font-size: 24px;
 }
 
-.navbar-left a,
-.navbar-left a:link,
-.navbar-left a:visited,
-.navbar-left a:hover,
-.navbar-left a:active {
+.navbar-left a {
     text-decoration: none;
     color: white;
 }
@@ -82,11 +414,17 @@ html {
     padding: 7px 12px;
     font-size: 0.9em;
     cursor: pointer;
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: all 0.2s ease;
 }
 
-.navbar form,
-.navbar a {
-    margin: 0;
+.navbar-right button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .dropdown {
@@ -104,6 +442,7 @@ html {
     cursor: pointer;
     font-weight: 500;
     transition: all 0.2s ease;
+    font-family: 'IBM Plex Mono', monospace;
 }
 
 .dropbtn:hover {
@@ -114,7 +453,8 @@ html {
 .dropdown-content {
     display: none;
     position: absolute;
-    background: rgba(25, 25, 25, 0.9);
+    right: 0;
+    background: rgba(25, 25, 25, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     min-width: 170px;
@@ -137,77 +477,110 @@ html {
 }
 
 .dropdown-content a:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: white;
-    border: none;
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .dropdown:hover .dropdown-content {
     display: flex;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
-}
-
-body {
-    min-height: 100vh;
-    background-image: url('/images/CarBackground.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    padding-top: 16px;
-}
-
-body.home-page {
-    background: none;
-    position: relative;
-    min-height: 100vh;
-}
-
-.home-background {
-    position: fixed;
-    inset: 0;
-    background-image: url('/images/FrontPic.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    z-index: -1;
-}
-
-.navbar form {
-    display: inline-flex;
+.pagination {
+    margin: 24px 0 32px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    width: auto;
-    max-width: none;
-    flex-direction: row;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
-.navbar input,
-.navbar select {
-    width: auto;
-    padding: initial;
-}
-
-.navbar .navbar-right button:not(.dropbtn) {
-    background-color: transparent;
+.pagination a {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 7px 12px;
-    font-size: 0.9em;
+    text-decoration: none;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 13px;
 }
 
-.navbar .navbar-right button:not(.dropbtn):hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.pagination a:hover {
+    background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.pagination span {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+}
+
+.message {
+    max-width: 540px;
+    margin: 15px auto;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.message.success,
+.success-message {
+    background: rgba(80, 255, 80, 0.1);
+    border: 1px solid rgba(80, 255, 80, 0.2);
+    color: #b3ffb3;
+    padding: 12px 16px;
+    border-radius: 10px;
+    max-width: 520px;
+    margin: 18px auto;
+    text-align: center;
+    font-size: 13px;
+}
+
+.message.error,
+.error-message {
+    background: rgba(255, 80, 80, 0.1);
+    border: 1px solid rgba(255, 80, 80, 0.2);
+    color: #ffb3b3;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.empty-state {
+    margin: 20px auto;
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    max-width: 520px;
+    backdrop-filter: blur(4px);
+}
+
+.bookings-wrapper {
+    max-width: 1050px;
+    margin: 30px auto 24px;
+    padding: 0 16px;
+}
+
+.bookings-title {
+    color: white;
+    font-size: 26px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.booking-form {
+    max-width: 520px;
+    margin: 0 auto;
 }
 
 .floating-login {
@@ -216,24 +589,22 @@ body.home-page {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 380px;
-    background: rgba(10, 10, 10, 0.25);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    max-width: 360px;
+    background: rgba(10, 10, 10, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
-    padding: 32px 28px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.5s ease-out;
+    padding: 28px 24px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    font-family: 'IBM Plex Mono', monospace;
+    animation: fadeIn 0.5s ease-out;
 }
 
 @keyframes fadeIn {
-    0% {
+    from {
         opacity: 0;
         transform: translate(-50%, -45%);
     }
-    100% {
+    to {
         opacity: 1;
         transform: translate(-50%, -50%);
     }
@@ -245,8 +616,6 @@ body.home-page {
     font-size: 28px;
     margin-bottom: 8px;
     font-weight: 500;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .floating-login .subtitle {
@@ -254,7 +623,6 @@ body.home-page {
     color: rgba(255, 255, 255, 0.8);
     margin-bottom: 24px;
     font-size: 13px;
-    font-weight: 300;
 }
 
 .floating-login .form-group {
@@ -265,9 +633,7 @@ body.home-page {
     display: block;
     margin-bottom: 6px;
     color: rgba(255, 255, 255, 0.9);
-    font-weight: 400;
     font-size: 12px;
-    letter-spacing: 0.3px;
     text-transform: uppercase;
 }
 
@@ -278,9 +644,7 @@ body.home-page {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     font-size: 13px;
-    font-family: 'IBM Plex Mono', monospace;
     color: white;
-    transition: all 0.2s ease;
     box-sizing: border-box;
 }
 
@@ -288,11 +652,6 @@ body.home-page {
     outline: none;
     border-color: rgba(255, 255, 255, 0.5);
     background: rgba(255, 255, 255, 0.15);
-}
-
-.floating-login input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 12px;
 }
 
 .floating-login .login-btn {
@@ -304,42 +663,15 @@ body.home-page {
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
-    font-family: 'IBM Plex Mono', monospace;
     cursor: pointer;
     transition: all 0.2s ease;
     margin-top: 16px;
-    letter-spacing: 0.5px;
+    font-family: 'IBM Plex Mono', monospace;
 }
 
 .floating-login .login-btn:hover {
     background: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.5);
-}
-
-.floating-login .login-btn:active {
-    transform: translateY(1px);
-}
-
-.floating-login .error-message {
-    background: rgba(255, 80, 80, 0.15);
-    border: 1px solid rgba(255, 80, 80, 0.3);
-    color: #ffb3b3;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 18px;
-    font-size: 12px;
-    text-align: center;
-}
-
-.floating-login .success-message {
-    background: rgba(80, 255, 80, 0.15);
-    border: 1px solid rgba(80, 255, 80, 0.3);
-    color: #b3ffb3;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 18px;
-    font-size: 12px;
-    text-align: center;
 }
 
 .floating-login .footer-links {
@@ -356,208 +688,8 @@ body.home-page {
 .floating-login .footer-links a {
     color: white;
     text-decoration: none;
-    font-weight: 500;
-    transition: opacity 0.2s;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     padding-bottom: 1px;
-}
-
-.floating-login .footer-links a:hover {
-    opacity: 0.8;
-    border-bottom-color: white;
-}
-
-.bookings-wrapper {
-    max-width: 1050px;
-    margin: 64px auto 24px;
-    padding: 0 16px;
-}
-
-.bookings-card {
-    background: rgba(20, 20, 20, 0.65);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-}
-
-.bookings-title {
-    color: white;
-    font-size: 28px;
-    font-weight: 500;
-    text-align: center;
-    margin-bottom: 24px;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.booking-form {
-    max-width: 520px;
-    margin: 0 auto;
-}
-
-.booking-form .form-group {
-    margin-bottom: 20px;
-}
-
-.booking-form label {
-    display: block;
-    margin-bottom: 8px;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 400;
-    font-size: 13px;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-}
-
-.booking-form input,
-.booking-form select {
-    width: 100%;
-    padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    font-size: 14px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: white;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-}
-
-.booking-form input:focus,
-.booking-form select:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.booking-form input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
-}
-
-.booking-form select option {
-    background: #1a1a1a;
-    color: white;
-}
-
-.btn-primary {
-    width: 100%;
-    padding: 13px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: 'IBM Plex Mono', monospace;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 16px;
-    letter-spacing: 0.5px;
-}
-
-.btn-primary:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-.btn-secondary {
-    padding: 7px 14px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    font-size: 12px;
-    font-family: 'IBM Plex Mono', monospace;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-.btn-danger {
-    background: rgba(255, 80, 80, 0.2);
-    border-color: rgba(255, 80, 80, 0.3);
-}
-
-.btn-danger:hover {
-    background: rgba(255, 80, 80, 0.3);
-    border-color: rgba(255, 80, 80, 0.5);
-}
-
-.table-container {
-    overflow-x: auto;
-    margin: 16px 0;
-}
-
-.bookings-table {
-    width: 100%;
-    border-collapse: collapse;
-    color: white;
-}
-
-.bookings-table th {
-    padding: 14px;
-    text-align: left;
-    background: rgba(255, 255, 255, 0.1);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.bookings-table td {
-    padding: 12px 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 13px;
-}
-
-.bookings-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.pagination-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    margin: 24px 0 10px;
-}
-
-.pagination-nav a {
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    font-size: 13px;
-}
-
-.pagination-nav a:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-.pagination-nav span {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 13px;
-}
-
-.detail-container {
-    max-width: 540px;
-    margin: 0 auto;
 }
 
 .detail-row {
@@ -569,9 +701,8 @@ body.home-page {
 .detail-label {
     flex: 0 0 130px;
     color: rgba(255, 255, 255, 0.7);
-    font-size: 13px;
+    font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
 }
 
 .detail-value {
@@ -581,95 +712,76 @@ body.home-page {
 }
 
 .detail-value.price {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
 }
 
-.message {
-    max-width: 540px;
-    margin: 18px auto;
-    padding: 12px 16px;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 13px;
-}
-
-.message.success {
-    background: rgba(80, 255, 80, 0.15);
-    border: 1px solid rgba(80, 255, 80, 0.3);
-    color: #b3ffb3;
-}
-
-.message.error {
-    background: rgba(255, 80, 80, 0.15);
-    border: 1px solid rgba(255, 80, 80, 0.3);
-    color: #ffb3b3;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 36px 16px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    margin: 16px 0;
-}
-
-body.home-page .bookings-wrapper {
-    margin-top: 90px;
-}
-
 @media (max-width: 768px) {
-    .floating-login {
-        width: 95%;
-        padding: 24px 18px;
-    }
-
-    .floating-login h2 {
-        font-size: 24px;
-    }
-
     .navbar {
-        margin: 10px;
-        padding: 9px 12px;
+        margin: 8px;
+        padding: 8px 12px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar-right {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .navbar-left h1 {
         font-size: 20px;
     }
 
-    .navbar-right {
-        gap: 8px;
+    .filter-form {
+        flex-direction: column;
+        gap: 10px;
     }
 
-    .navbar-right a,
-    .navbar-right button,
-    .dropbtn {
-        padding: 6px 10px;
-        font-size: 0.82em;
+    .filter-group {
+        width: 100%;
+    }
+
+    .filter-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .page-header h2 {
+        font-size: 22px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        font-size: 10px;
     }
 
     .bookings-wrapper {
-        margin: 56px 10px 20px;
-        padding: 0 10px;
+        margin: 20px 10px;
+        padding: 0;
     }
 
-    .bookings-card {
-        padding: 18px;
+    .floating-login {
+        padding: 20px 16px;
+        width: 95%;
     }
 
-    .bookings-title {
-        font-size: 22px;
+    .floating-login h2 {
+        font-size: 24px;
     }
 
     .detail-row {
         flex-direction: column;
-        padding: 10px 0;
+        gap: 5px;
     }
 
     .detail-label {
         flex: none;
-        margin-bottom: 5px;
     }
 }

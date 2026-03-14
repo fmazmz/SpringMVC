@@ -1,77 +1,65 @@
-.page-header {
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+.table-container {
     width: 100%;
-    margin-top: 24px;
-    margin-bottom: 10px;
+    overflow-x: auto;
+    margin: 16px 0;
 }
 
-.page-header h2 {
-    color: white;
-    font-size: 30px;
-    font-weight: 500;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    margin: 0;
-    font-family: 'IBM Plex Mono', monospace;
-}
-
-.list-container {
-    display: flex;
-    text-align: center;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 16px;
-    padding: 0 16px;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
+.table-card {
+    width: 100%;
+    background: rgba(18, 18, 18, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .data-table {
-    border-collapse: collapse;
     width: 100%;
-    max-width: 950px;
-    margin: 0 auto;
-    background: rgba(10, 10, 10, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-collapse: collapse;
+    color: white;
     font-family: 'IBM Plex Mono', monospace;
 }
 
 .data-table th {
     padding: 14px 12px;
-    background: rgba(0, 0, 0, 0.5);
-    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.75);
+    color: rgba(255, 255, 255, 0.92);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 0.4px;
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
     text-align: left;
+    white-space: nowrap;
 }
 
 .data-table td {
     padding: 10px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.8);
+    background: rgba(20, 20, 20, 0.88);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.92);
     font-size: 13px;
     text-align: left;
+    vertical-align: middle;
 }
 
-.data-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05);
+.data-table tbody tr:hover td {
+    background: rgba(40, 40, 40, 0.95);
 }
 
 .data-table tbody tr:last-child td {
     border-bottom: none;
+}
+
+.data-table a {
+    text-decoration: none;
+}
+
+.data-table td form {
+    margin: 0;
+    display: inline-block;
 }
 
 .data-table button {
@@ -94,98 +82,33 @@
     transform: translateY(-1px);
 }
 
-.data-table form button[type="submit"] {
-    border-color: rgba(255, 80, 80, 0.3);
+.data-table .delete-form button {
+    border-color: rgba(255, 80, 80, 0.35);
     color: #ffb3b3;
 }
 
-.data-table form button[type="submit"]:hover {
-    background: rgba(255, 80, 80, 0.15);
-    border-color: rgba(255, 80, 80, 0.5);
+.data-table .delete-form button:hover {
+    background: rgba(255, 80, 80, 0.18);
+    border-color: rgba(255, 80, 80, 0.55);
 }
 
-.data-table a {
-    text-decoration: none;
+.table-compact th {
+    font-size: 10px;
+    padding: 8px 6px;
 }
 
-.data-table td a button {
-    width: 100%;
+.table-compact td {
+    font-size: 11px;
+    padding: 7px 6px;
 }
 
-.pagination {
-    margin-top: 24px;
-    margin-bottom: 32px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-}
-
-.pagination a {
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    font-size: 13px;
-    font-family: 'IBM Plex Mono', monospace;
-}
-
-.pagination a:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
-}
-
-.pagination span {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 13px;
-    font-family: 'IBM Plex Mono', monospace;
-}
-
-.success-message {
-    margin-top: 24px;
-    margin-bottom: 18px;
-    text-align: center;
-    color: #b3ffb3;
-    font-weight: 400;
-    background: rgba(80, 255, 80, 0.15);
-    border: 1px solid rgba(80, 255, 80, 0.3);
-    padding: 12px 16px;
-    border-radius: 10px;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 13px;
-    font-family: 'IBM Plex Mono', monospace;
-    backdrop-filter: blur(5px);
-}
-
-.empty-state {
-    margin-top: 24px;
-    text-align: center;
-    padding: 36px 16px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-    font-family: 'IBM Plex Mono', monospace;
+.table-compact button {
+    font-size: 10px;
+    padding: 4px 7px;
+    min-width: 48px;
 }
 
 @media (max-width: 768px) {
-    .list-container {
-        padding: 0 10px;
-    }
-
-    .data-table {
-        font-size: 12px;
-    }
 
     .data-table th,
     .data-table td {
@@ -198,113 +121,14 @@
         font-size: 11px;
     }
 
-    .pagination {
-        gap: 10px;
-        flex-wrap: wrap;
+    .table-compact th,
+    .table-compact td {
+        padding: 8px 6px;
     }
 
-    .pagination a {
-        padding: 7px 12px;
+    .table-compact button {
+        min-width: 46px;
+        font-size: 10px;
+        padding: 4px 6px;
     }
-
-    .page-header h2 {
-        font-size: 24px;
-    }
-}
-
-.cars-page {
-    max-width: 760px;
-    margin: 10px auto 0 auto;
-    padding: 0 8px;
-}
-
-.page-header {
-    margin-top: 18px;
-    margin-bottom: 6px;
-}
-
-.page-header h2 {
-    font-size: 22px;
-}
-
-.cars-filter-box {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto 12px auto;
-    padding: 12px 14px;
-    border-radius: 10px;
-}
-
-.cars-page .form-simple {
-    gap: 6px;
-}
-
-.cars-page .form-field-simple {
-    margin-bottom: 6px;
-}
-
-.cars-page .form-field-simple label {
-    font-size: 11px;
-}
-
-.cars-page input,
-.cars-page select {
-    font-size: 11px;
-    padding: 6px 8px;
-    min-height: 30px;
-}
-
-.cars-page .button-container-simple {
-    margin-top: 6px;
-    gap: 6px;
-}
-
-.cars-page .button-container-simple button,
-.cars-page .button-container-simple a button {
-    font-size: 11px;
-    padding: 6px 10px;
-}
-
-.cars-page .data-table {
-    width: 100%;
-    max-width: 760px;
-    border-radius: 10px;
-}
-
-.cars-page .data-table th {
-    font-size: 10px;
-    padding: 8px 6px;
-}
-
-.cars-page .data-table td {
-    font-size: 11px;
-    padding: 7px 6px;
-}
-
-.cars-page .data-table button {
-    font-size: 10px;
-    padding: 4px 7px;
-    min-width: 48px;
-}
-
-.cars-page .pagination {
-    margin-top: 14px;
-    margin-bottom: 20px;
-    gap: 8px;
-}
-
-.cars-page .pagination a {
-    font-size: 11px;
-    padding: 5px 10px;
-}
-
-.cars-page .pagination span {
-    font-size: 11px;
-}
-
-.cars-page .success-message,
-.cars-page .empty-state {
-    max-width: 380px;
-    font-size: 11px;
-    padding: 8px 10px;
 }

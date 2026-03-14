@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
-
 import java.util.UUID;
 
 @Controller
-@RequestMapping("cars")
+@RequestMapping("/cars")
 public class CarController {
 
     private final CarService carService;
@@ -26,21 +25,30 @@ public class CarController {
         this.carService = carService;
     }
 
-    @GetMapping
-    public String list(
-            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-            @ModelAttribute CarFilter filter,
-            Model model
-    ) {
-        var cars = carService.search(pageable, filter);
-
-        model.addAttribute("cars", cars);
-        model.addAttribute("filter", filter);
-
-        return "cars/list";
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/cars/browse";
     }
 
-    @GetMapping("new")
+    @GetMapping("/browse")
+    public String browse(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @ModelAttribute CarFilter filter,
+            @RequestParam(required = false) String sort,
+            Model model
+    ) {
+        boolean hasSearch = hasBrowseInput(filter) || hasSort(sort);
+
+        model.addAttribute("filter", filter);
+        model.addAttribute("hasSearch", hasSearch);
+
+        var cars = carService.search(pageable, filter);
+        model.addAttribute("cars", cars);
+
+        return "cars/browse";
+    }
+
+    @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute(
                 "car",
@@ -50,7 +58,7 @@ public class CarController {
         return "cars/create";
     }
 
-    @PostMapping("new")
+    @PostMapping("/new")
     public String create(
             @Valid @ModelAttribute("car") CreateCarDTO car,
             BindingResult bindingResult,
@@ -61,35 +69,48 @@ public class CarController {
         }
 
         carService.create(car);
-        redirectAttributes.addFlashAttribute("success", "Car created");
+        redirectAttributes.addFlashAttribute("success", "Car created successfully");
 
-        return "redirect:/cars";
+        return "redirect:/cars/browse";
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public String view(@PathVariable UUID id, Model model) {
-        CarDTO car = carService.getById(id);
-        model.addAttribute("car", car);
-        return "cars/view";
+        try {
+            CarDTO car = carService.getById(id);
+            model.addAttribute("car", car);
+            return "cars/view";
+        } catch (Exception e) {
+            model.addAttribute("error", "Car not found");
+            return "redirect:/cars/browse";
+        }
     }
 
-    @GetMapping("{id}/update")
+    @GetMapping("/{id}/update")
     public String updateForm(@PathVariable UUID id, Model model) {
-        CarDTO car = carService.getById(id);
-        UpdateCarDTO dto = new UpdateCarDTO(
-                car.make(),
-                car.model(),
-                car.hourlyPrice(),
-                car.licencePlate(),
-                car.vin(),
-                car.year()
-        );
-        model.addAttribute("car", dto);
-        model.addAttribute("carId", id);
-        return "cars/update";
+        try {
+            CarDTO car = carService.getById(id);
+
+            UpdateCarDTO dto = new UpdateCarDTO(
+                    car.make(),
+                    car.model(),
+                    car.hourlyPrice(),
+                    car.licencePlate(),
+                    car.vin(),
+                    car.year()
+            );
+
+            model.addAttribute("car", dto);
+            model.addAttribute("carId", id);
+
+            return "cars/update";
+        } catch (Exception e) {
+            model.addAttribute("error", "Car not found");
+            return "redirect:/cars/browse";
+        }
     }
 
-    @PostMapping("{id}/update")
+    @PostMapping("/{id}/update")
     public String update(
             @PathVariable UUID id,
             @Valid @ModelAttribute("car") UpdateCarDTO carDto,
@@ -102,18 +123,52 @@ public class CarController {
             return "cars/update";
         }
 
-        carService.update(id, carDto);
-        redirectAttributes.addFlashAttribute("success", "Car updated");
-        return "redirect:/cars/" + id;
+        try {
+            carService.update(id, carDto);
+            redirectAttributes.addFlashAttribute("success", "Car updated successfully");
+            return "redirect:/cars/" + id;
+        } catch (Exception e) {
+            model.addAttribute("error", "Error updating car: " + e.getMessage());
+            model.addAttribute("carId", id);
+            return "cars/update";
+        }
     }
 
-    @PostMapping("{id}/delete")
+    @PostMapping("/{id}/delete")
     public String delete(
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {
-        carService.delete(id);
-        redirectAttributes.addFlashAttribute("success", "Car deleted");
-        return "redirect:/cars";
+        try {
+            carService.delete(id);
+            redirectAttributes.addFlashAttribute("success", "Car deleted successfully");
+        } catch (Exception e) {
+            if (e.getMessage() != null && e.getMessage().contains("foreign key constraint")) {
+                redirectAttributes.addFlashAttribute("error",
+                        "Cannot delete this car because it has existing bookings. Please delete all bookings for this car first.");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Error deleting car: " + e.getMessage());
+            }
+        }
+        return "redirect:/cars/browse";
+    }
+
+    private boolean hasBrowseInput(CarFilter filter) {
+        return notBlank(filter.q())
+                || notBlank(filter.make())
+                || notBlank(filter.model())
+                || filter.year() != null
+                || filter.minPrice() != null
+                || filter.maxPrice() != null
+                || notBlank(filter.licencePlate())
+                || notBlank(filter.vin());
+    }
+
+    private boolean hasSort(String sort) {
+        return sort != null && !sort.isBlank();
+    }
+
+    private boolean notBlank(String value) {
+        return value != null && !value.isBlank();
     }
 }
