@@ -1,76 +1,227 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-    <title>Booking Details</title>
+    <title>Booking Details - Fleetify</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+    <style>
+        .data-table td {
+            transition: background-color 0.2s ease;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(40, 40, 40, 0.95);
+        }
+
+        .data-table td:first-child {
+            background: rgba(0, 0, 0, 0.6);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            width: 140px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.4px;
+        }
+
+        .data-table td:first-child label {
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            font-family: 'IBM Plex Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .table-card {
+            background: rgba(18, 18, 18, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: white;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 13px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table td:last-child {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 400;
+        }
+
+        .price-value {
+            color: #b3ffb3;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .message {
+            max-width: 540px;
+            margin: 15px auto;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .message.success {
+            background: rgba(80, 255, 80, 0.1);
+            border: 1px solid rgba(80, 255, 80, 0.2);
+            color: #b3ffb3;
+        }
+
+        .page-header h2 {
+            color: white;
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+
+        .list-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .id-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: monospace;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
 </head>
 <body>
+
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="bookings-wrapper">
-    <div class="bookings-card">
-        <h2 class="bookings-title">Booking Details</h2>
+<div th:if="${success}" class="message success" th:text="${success}"></div>
 
-        <div class="detail-container">
-            <div class="detail-row">
-                <span class="detail-label">Driver ID:</span>
-                <span class="detail-value" th:text="${booking.driverId}">Driver</span>
-            </div>
+<div class="page-header">
+    <h2>Booking Details</h2>
+</div>
 
-            <div class="detail-row">
-                <span class="detail-label">Car:</span>
-                <span class="detail-value" th:text="${booking.carMake + ' ' + booking.carModel}">Car</span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">Start Time:</span>
-                <span class="detail-value"
-                      th:text="${#temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">
-                    Start
-                </span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">End Time:</span>
-                <span class="detail-value"
-                      th:text="${#temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">
-                    End
-                </span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">Insurance:</span>
-                <span class="detail-value" th:text="${booking.insuranceType}">Insurance</span>
-            </div>
-
-            <div class="detail-row">
-                <span class="detail-label">Total Price:</span>
-                <span class="detail-value price"
-                      th:text="${'$' + #numbers.formatDecimal(booking.totalPrice, 1, 2)}">
-                    Price
-                </span>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 30px;">
-            <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
-               th:href="@{/bookings}"
-               class="btn-secondary">
-                Back to Bookings
-            </a>
-
-            <a th:if="${#authorization.expression('hasRole(''DRIVER'')')}"
-               th:href="@{/bookings/my-bookings}"
-               class="btn-secondary">
-                Back to My Bookings
-            </a>
-        </div>
-
-        <div th:if="${success}" class="message success">
-            <span th:text="${success}"></span>
+<div class="list-container">
+    <div class="table-container">
+        <div class="table-card">
+            <table class="data-table">
+                <tbody>
+                <tr>
+                    <td>Driver ID</td>
+                    <td>
+                        <span th:text="${booking.driverId}" class="id-badge"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Car</td>
+                    <td th:text="${booking.carMake + ' ' + booking.carModel}">Car</td>
+                </tr>
+                <tr>
+                    <td>Start Time</td>
+                    <td th:text="${#temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">
+                        Start
+                    </td>
+                </tr>
+                <tr>
+                    <td>End Time</td>
+                    <td th:text="${#temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, yyyy HH:mm')}">
+                        End
+                    </td>
+                </tr>
+                <tr>
+                    <td>Duration</td>
+                    <td>
+                        <span th:text="${(booking.endTime().toEpochMilli() - booking.startTime().toEpochMilli()) / 3600000 + ' hours'}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Insurance</td>
+                    <td th:text="${booking.insuranceType}">Insurance</td>
+                </tr>
+                <tr>
+                    <td>Total Price</td>
+                    <td class="price-value" th:text="${'$' + #numbers.formatDecimal(booking.totalPrice, 1, 2)}">
+                        Price
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <div class="button-group">
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+           th:href="@{/bookings}"
+           class="btn btn-primary">
+            Back to Bookings
+        </a>
+        <a th:if="${#authorization.expression('hasRole(''DRIVER'')') and !#authorization.expression('hasRole(''ADMIN'')')}"
+           th:href="@{/bookings/my-bookings}"
+           class="btn btn-primary">
+            Back to My Bookings
+        </a>
+    </div>
 </div>
+
 </body>
 </html>

@@ -1,85 +1,312 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fleetify - Book a Car</title>
+    <title>Book a Car - Fleetify</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
+    <style>
+        .data-table td {
+            transition: background-color 0.2s ease;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(40, 40, 40, 0.95);
+        }
+
+        .data-table td:first-child {
+            background: rgba(0, 0, 0, 0.6);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            width: 140px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.4px;
+        }
+
+        .data-table td:first-child label {
+            color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            display: block;
+        }
+
+        .form-input, .form-select {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            color: white;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            padding: 8px 10px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:hover, .form-select:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+        }
+
+        .form-select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .field-error {
+            display: block;
+            color: #ffb3b3;
+            font-size: 10px;
+            margin-top: 4px;
+            background: rgba(255, 80, 80, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border-left: 2px solid rgba(255, 80, 80, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            font-family: 'IBM Plex Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            min-width: 140px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .table-card {
+            background: rgba(18, 18, 18, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: white;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 12px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .message {
+            max-width: 540px;
+            margin: 15px auto;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .message.error {
+            background: rgba(255, 80, 80, 0.1);
+            border: 1px solid rgba(255, 80, 80, 0.2);
+            color: #ffb3b3;
+        }
+
+        .page-header h2 {
+            color: white;
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+
+        .input-hint {
+            display: block;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .available-cars-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="bookings-wrapper">
-    <div class="bookings-card">
-        <h2 class="bookings-title">Book a Car</h2>
+<div th:if="${error}" class="message error" th:text="${error}"></div>
 
-        <div th:if="${error}" class="message error" th:text="${error}"></div>
+<div class="page-header">
+    <h2>Book a Car</h2>
+</div>
 
-        <div class="booking-form">
-            <form th:action="@{/bookings/new}" th:object="${booking}" method="get">
-                <div class="form-group">
-                    <label for="startTime">Start Time</label>
-                    <input type="datetime-local"
-                           id="startTime"
-                           name="startTime"
-                           th:value="${booking.startTime != null ? #temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
-                    <span class="field-error" th:errors="*{startTime}"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="endTime">End Time</label>
-                    <input type="datetime-local"
-                           id="endTime"
-                           name="endTime"
-                           th:value="${booking.endTime != null ? #temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
-                    <span class="field-error" th:errors="*{endTime}"></span>
-                </div>
-
-                <button type="submit" class="btn-primary">Find Available Cars</button>
+<div class="list-container">
+    <div class="table-container" style="max-width: 550px;">
+        <div class="table-card">
+            <form th:action="@{/bookings/new}" th:object="${booking}" method="get" id="timeForm" style="width: 100%; margin: 0;">
+                <table class="data-table" style="margin-bottom: 0;">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <label for="startTime">Start Time</label>
+                        </td>
+                        <td>
+                            <input type="datetime-local"
+                                   id="startTime"
+                                   name="startTime"
+                                   th:value="${booking.startTime != null ? #temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd\'T\'HH:mm') : ''}"
+                                   class="form-input">
+                            <span class="field-error" th:errors="*{startTime}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="endTime">End Time</label>
+                        </td>
+                        <td>
+                            <input type="datetime-local"
+                                   id="endTime"
+                                   name="endTime"
+                                   th:value="${booking.endTime != null ? #temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd\'T\'HH:mm') : ''}"
+                                   class="form-input">
+                            <span class="field-error" th:errors="*{endTime}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </form>
-
-            <form th:if="${cars != null}" th:action="@{/bookings/new}" th:object="${booking}" method="post" style="margin-top: 30px;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="hidden" th:field="*{driverId}">
-                <input type="hidden"
-                       name="startTime"
-                       th:value="${booking.startTime != null ? #temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
-                <input type="hidden"
-                       name="endTime"
-                       th:value="${booking.endTime != null ? #temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}">
-
-                <div class="form-group">
-                    <label for="car">Car</label>
-                    <select id="car" th:field="*{carId}">
-                        <option value="">Select car</option>
-                        <option th:each="car : ${cars}"
-                                th:value="${car.id}"
-                                th:text="${car.make + ' - ' + car.model}">
-                        </option>
-                    </select>
-                    <span class="field-error" th:errors="*{carId}"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="insurance">Insurance</label>
-                    <select id="insurance" th:field="*{insuranceType}">
-                        <option value="">Select insurance</option>
-                        <option th:each="type : ${insuranceTypes}"
-                                th:value="${type.key}"
-                                th:text="${type.value}">
-                        </option>
-                    </select>
-                    <span class="field-error" th:errors="*{insuranceType}"></span>
-                </div>
-
-                <button type="submit" class="btn-primary">Book Now</button>
-            </form>
-
-            <div th:if="${cars != null and #lists.isEmpty(cars)}" class="empty-state">
-                No cars available for the selected time range.
-            </div>
         </div>
     </div>
+
+    <div class="button-group">
+        <button type="submit" form="timeForm" class="btn btn-primary">Find Available Cars</button>
+        <a th:href="@{/}" class="btn">Cancel</a>
+    </div>
+
+    <div th:if="${cars != null and !cars.isEmpty()}" class="available-cars-section">
+        <div class="section-title">Available Cars</div>
+        <div class="table-container" style="max-width: 650px;">
+            <div class="table-card">
+                <form th:action="@{/bookings/new}"
+                      th:object="${booking}"
+                      method="post"
+                      id="bookingForm"
+                      style="width: 100%; margin: 0;">
+
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" th:field="*{driverId}">
+                    <input type="hidden"
+                           name="startTime"
+                           th:value="${booking.startTime != null ? #temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd\'T\'HH:mm') : ''}">
+                    <input type="hidden"
+                           name="endTime"
+                           th:value="${booking.endTime != null ? #temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd\'T\'HH:mm') : ''}">
+
+                    <table class="data-table" style="margin-bottom: 0;">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <label for="carId">Select Car</label>
+                                <span class="input-hint">Choose vehicle</span>
+                            </td>
+                            <td>
+                                <select id="carId" th:field="*{carId}" class="form-select">
+                                    <option value="">-- Select a car --</option>
+                                    <option th:each="car : ${cars}"
+                                            th:value="${car.id}"
+                                            th:text="${car.make + ' ' + car.model + ' (' + car.licencePlate + ') - $' + car.hourlyPrice + '/hr'}">
+                                    </option>
+                                </select>
+                                <span class="field-error" th:if="${#fields.hasErrors('carId')}" th:errors="*{carId}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="insuranceType">Insurance Type</label>
+                                <span class="input-hint">Coverage level</span>
+                            </td>
+                            <td>
+                                <select id="insuranceType" th:field="*{insuranceType}" class="form-select">
+                                    <option value="">-- Select insurance --</option>
+                                    <option th:each="type : ${insuranceTypes}"
+                                            th:value="${type.key}"
+                                            th:text="${type.value}">
+                                    </option>
+                                </select>
+                                <span class="field-error" th:if="${#fields.hasErrors('insuranceType')}" th:errors="*{insuranceType}"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" form="bookingForm" class="btn btn-primary">Confirm Booking</button>
+        </div>
+    </div>
+
+    <div th:if="${cars != null and cars.isEmpty()}" class="message" style="background: rgba(255,255,255,0.05); max-width: 550px; margin: 30px auto;">
+        <p style="color: rgba(255,255,255,0.8);">No cars available for the selected time range.</p>
+    </div>
 </div>
+
 </body>
 </html>
