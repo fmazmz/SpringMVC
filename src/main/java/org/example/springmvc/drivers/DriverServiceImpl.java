@@ -122,11 +122,8 @@ public class DriverServiceImpl implements DriverService {
             return Page.empty(pageable);
         }
 
-        String searchIn = normalizeSearchIn(filter.searchIn());
-
         return driverRepository.searchDrivers(
                 wildcard(filter.q()),
-                searchIn,
                 wildcard(filter.fname()),
                 wildcard(filter.lname()),
                 wildcard(filter.ssn()),
@@ -152,16 +149,5 @@ public class DriverServiceImpl implements DriverService {
         } catch (IllegalArgumentException e) {
             return null;
         }
-    }
-
-    private String normalizeSearchIn(String searchIn) {
-        if (searchIn == null || searchIn.isBlank()) {
-            return "all";
-        }
-
-        return switch (searchIn.toLowerCase()) {
-            case "fname", "lname", "ssn" -> searchIn.toLowerCase();
-            default -> "all";
-        };
     }
 }

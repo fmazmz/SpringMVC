@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -18,31 +19,21 @@ public interface DriverRepository extends ListCrudRepository<Driver, UUID> {
 
     @Query("""
         SELECT d FROM Driver d
-        WHERE (
-            :q IS NULL OR
-            (
-                :searchIn = 'all' AND (
-                    LOWER(d.fname) LIKE :q OR
-                    LOWER(d.lname) LIKE :q OR
-                    LOWER(d.ssn) LIKE :q
-                )
-            ) OR
-            (:searchIn = 'fname' AND LOWER(d.fname) LIKE :q) OR
-            (:searchIn = 'lname' AND LOWER(d.lname) LIKE :q) OR
-            (:searchIn = 'ssn' AND LOWER(d.ssn) LIKE :q)
-        )
+        WHERE (:q IS NULL OR 
+               LOWER(d.fname) LIKE :q OR 
+               LOWER(d.lname) LIKE :q OR 
+               LOWER(d.ssn) LIKE :q)
         AND (:fname IS NULL OR LOWER(d.fname) LIKE :fname)
         AND (:lname IS NULL OR LOWER(d.lname) LIKE :lname)
         AND (:ssn IS NULL OR LOWER(d.ssn) LIKE :ssn)
         AND (:driverId IS NULL OR d.id = :driverId)
-    """)
+        """)
     Page<Driver> searchDrivers(
-            String q,
-            String searchIn,
-            String fname,
-            String lname,
-            String ssn,
-            UUID driverId,
+            @Param("q") String q,
+            @Param("fname") String fname,
+            @Param("lname") String lname,
+            @Param("ssn") String ssn,
+            @Param("driverId") UUID driverId,
             Pageable pageable
     );
 }
