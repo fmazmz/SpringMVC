@@ -63,17 +63,13 @@
 }
 
 .data-table button {
-    padding: 6px 12px;
     background: transparent;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 6px;
-    font-size: 12px;
     font-family: 'IBM Plex Mono', monospace;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-weight: 400;
-    min-width: 70px;
 }
 
 .data-table button:hover {
