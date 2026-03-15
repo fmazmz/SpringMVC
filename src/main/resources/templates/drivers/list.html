@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="filter-group">
-                    <label for="size">Show</label>
+                    <label for="size">Page size</label>
                     <select id="size" name="size">
                         <option value="5" th:selected="${param.size != null and #strings.contains(param.size[0], '5')}">5</option>
                         <option value="10" th:selected="${param.size == null or #strings.contains(param.size[0], '10')}">10</option>

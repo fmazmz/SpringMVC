@@ -19,7 +19,7 @@
 <div class="list-container">
     <div class="filter-section">
         <div class="filter-box">
-            <form class="filter-form" th:action="@{/cars/browse}" method="get">
+            <form class="filter-form" th:action="@{/cars/browse}" method="get" id="filterForm">
                 <div class="filter-group">
                     <label for="q">Search</label>
                     <input type="text" id="q" name="q" th:value="${filter.q}" placeholder="Make, model...">
@@ -61,6 +61,16 @@
                         <option value="hourlyPrice,desc" th:selected="${param.sort != null and #strings.contains(param.sort[0], 'hourlyPrice,desc')}">Price High-Low</option>
                         <option value="year,desc" th:selected="${param.sort != null and #strings.contains(param.sort[0], 'year,desc')}">Newest</option>
                         <option value="year,asc" th:selected="${param.sort != null and #strings.contains(param.sort[0], 'year,asc')}">Oldest</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="size">Page size</label>
+                    <select id="size" name="size">
+                        <option value="5" th:selected="${param.size != null and #strings.contains(param.size[0], '5')}">5</option>
+                        <option value="10" th:selected="${param.size == null or #strings.contains(param.size[0], '10')}">10</option>
+                        <option value="20" th:selected="${param.size != null and #strings.contains(param.size[0], '20')}">20</option>
+                        <option value="50" th:selected="${param.size != null and #strings.contains(param.size[0], '50')}">50</option>
                     </select>
                 </div>
 
@@ -128,17 +138,40 @@
 
     <div class="pagination" th:if="${cars != null and cars.totalPages > 0}">
         <a th:if="${cars.hasPrevious()}"
-           th:href="@{/cars/browse(page=${cars.number-1}, q=${param.q}, make=${param.make}, model=${param.model}, year=${param.year}, minPrice=${param.minPrice}, maxPrice=${param.maxPrice}, sort=${param.sort})}"
+           th:href="@{/cars/browse(
+           page=${cars.number-1},
+           size=${param.size},
+           q=${filter.q},
+           make=${filter.make},
+           model=${filter.model},
+           year=${filter.year},
+           minPrice=${filter.minPrice},
+           maxPrice=${filter.maxPrice},
+           sort=${param.sort}
+       )}"
            class="btn btn-sm">
             ← Previous
         </a>
+
         <span>Page <span th:text="${cars.number + 1}"></span> of <span th:text="${cars.totalPages}"></span></span>
+
         <a th:if="${cars.hasNext()}"
-           th:href="@{/cars/browse(page=${cars.number+1}, q=${param.q}, make=${param.make}, model=${param.model}, year=${param.year}, minPrice=${param.minPrice}, maxPrice=${param.maxPrice}, sort=${param.sort})}"
+           th:href="@{/cars/browse(
+           page=${cars.number+1},
+           size=${param.size},
+           q=${filter.q},
+           make=${filter.make},
+           model=${filter.model},
+           year=${filter.year},
+           minPrice=${filter.minPrice},
+           maxPrice=${filter.maxPrice},
+           sort=${param.sort}
+       )}"
            class="btn btn-sm">
             Next →
         </a>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/js/filter-forms.js}"></script>
 </body>
 </html>v
