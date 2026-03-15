@@ -4,6 +4,7 @@ import org.example.springmvc.cars.dto.CarDTO;
 import org.example.springmvc.cars.dto.CarFilter;
 import org.example.springmvc.cars.dto.CreateCarDTO;
 import org.example.springmvc.cars.dto.UpdateCarDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("cars")
 public class CarController {
@@ -38,6 +40,7 @@ public class CarController {
             @RequestParam(required = false) String sort,
             Model model
     ) {
+        log.debug("GET /cars/browse - page={}, sort={}", pageable.getPageNumber(), sort);
         boolean hasSearch = (filter.q() != null && !filter.q().isBlank())
                 || (filter.make() != null && !filter.make().isBlank())
                 || (filter.model() != null && !filter.model().isBlank())
@@ -73,7 +76,10 @@ public class CarController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
+        log.debug("POST /cars/new - make={}, model={}", car.make(), car.model());
+
         if (bindingResult.hasErrors()) {
+            log.debug("Validation errors on car creation: {}", bindingResult.getAllErrors());
             return "cars/create";
         }
 
@@ -85,6 +91,7 @@ public class CarController {
 
     @GetMapping("{id}")
     public String view(@PathVariable UUID id, Model model) {
+        log.debug("GET /cars/{}", id);
         CarDTO car = carService.getById(id);
         model.addAttribute("car", car);
         return "cars/view";
@@ -117,6 +124,7 @@ public class CarController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        log.debug("POST /cars/{}/update", id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("carId", id);
             return "cars/update";
@@ -132,6 +140,7 @@ public class CarController {
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {
+        log.debug("POST /cars/{}/delete", id);
         carService.delete(id);
         redirectAttributes.addFlashAttribute("success", "Car deleted successfully");
         return "redirect:/cars/browse";

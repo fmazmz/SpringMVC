@@ -13,6 +13,7 @@ import org.example.springmvc.exceptions.*;
 import org.example.springmvc.insurances.CarInsurance;
 import org.example.springmvc.insurances.InsuranceType;
 import org.example.springmvc.utils.SearchUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 public class BookingService {
@@ -46,6 +48,7 @@ public class BookingService {
 
     @Transactional(readOnly = true)
     public Page<BookingDTO> search(Pageable pageable, BookingFilter filter) {
+        log.debug("Searching bookings with filter: q={}, carId={}, driverId={}", filter.q(), filter.carId(), filter.driverId());
         return repository.searchBookings(
                 SearchUtils.toWildcardPattern(filter.q()),
                 filter.carId(),
@@ -57,10 +60,13 @@ public class BookingService {
 
     @Transactional(readOnly = true)
     public BookingDTO getById(UUID id) {
+        log.debug("Fetching booking by id={}", id);
         return BookingMapper.toDto(findBookingById(id));
     }
 
     public void create(CreateBookingDTO dto) {
+        log.debug("Creating booking: carId={}, driverId={}, startTime={}, endTime={}", dto.carId(), dto.driverId(), dto.startTime(), dto.endTime());
+
         Car car = findCarById(dto.carId());
         Driver driver = findDriverById(dto.driverId());
 
@@ -83,9 +89,12 @@ public class BookingService {
 
         Booking booking = BookingMapper.fromDto(dto, car, driver, totalPrice);
         repository.save(booking);
+        log.info("Booking created successfully: carId={}, driverId={}, totalPrice={}", dto.carId(), dto.driverId(), totalPrice);
     }
 
     public void update(UUID id, UpdateBookingDTO dto) {
+        log.debug("Updating booking: id={}", id);
+
         Booking booking = findBookingById(id);
         Car car = findCarById(dto.carId());
         Driver driver = findDriverById(dto.driverId());
@@ -114,14 +123,18 @@ public class BookingService {
         );
 
         BookingMapper.updateEntity(booking, car, driver, dto, totalPrice);
+        log.info("Booking updated successfully: id={}", id);
     }
 
     public void delete(UUID id) {
+        log.debug("Deleting booking: id={}", id);
         Booking booking = findBookingById(id);
         repository.delete(booking);
+        log.info("Booking deleted successfully: id={}", id);
     }
 
     public void deleteByDriver(UUID bookingId, UUID driverId) {
+        log.debug("Driver deleting booking: bookingId={}, driverId={}", bookingId, driverId);
         Booking booking = findBookingById(bookingId);
 
         if (!booking.getDriver().getId().equals(driverId)) {
@@ -129,10 +142,12 @@ public class BookingService {
         }
 
         repository.delete(booking);
+        log.info("Booking deleted by driver: bookingId={}, driverId={}", bookingId, driverId);
     }
 
     @Transactional(readOnly = true)
     public Page<BookingDTO> getDriverBookings(UUID driverId, Pageable pageable) {
+        log.debug("Fetching bookings for driver: driverId={}", driverId);
         return repository.findByDriverId(driverId, pageable)
                 .map(BookingMapper::toDto);
     }

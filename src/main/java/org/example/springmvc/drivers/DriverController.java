@@ -7,6 +7,7 @@ import org.example.springmvc.drivers.dto.DriverFilter;
 import org.example.springmvc.drivers.dto.UpdateDriverDTO;
 import org.example.springmvc.users.UserService;
 import org.example.springmvc.users.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("drivers")
 public class DriverController {
@@ -35,6 +37,7 @@ public class DriverController {
             @ModelAttribute DriverFilter filter,
             Model model
     ) {
+        log.debug("GET /drivers - page={}", pageable.getPageNumber());
         var drivers = driverService.search(pageable, filter);
         model.addAttribute("drivers", drivers);
         model.addAttribute("filter", filter);
@@ -54,7 +57,10 @@ public class DriverController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
+        log.debug("POST /drivers/new");
+
         if (bindingResult.hasErrors()) {
+            log.debug("Validation errors on driver creation: {}", bindingResult.getAllErrors());
             return "drivers/create";
         }
 
@@ -81,6 +87,7 @@ public class DriverController {
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes,
                          Model model) {
+        log.debug("POST /drivers/{}/update", id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("isUpdate", true);
             model.addAttribute("driverId", id);
@@ -95,6 +102,7 @@ public class DriverController {
     @PostMapping("{id}/delete")
     public String delete(@PathVariable UUID id,
                          RedirectAttributes redirectAttributes) {
+        log.debug("POST /drivers/{}/delete", id);
         driverService.delete(id);
         redirectAttributes.addFlashAttribute("success", "Driver deleted");
         return "redirect:/drivers";

@@ -5,6 +5,7 @@ import org.example.springmvc.exceptions.ErrorMessages;
 import org.example.springmvc.users.dto.CreateUserDTO;
 import org.example.springmvc.users.model.User;
 import org.example.springmvc.users.model.UserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 public class UserService {
@@ -24,6 +26,8 @@ public class UserService {
     }
 
     public void create(CreateUserDTO dto) {
+        log.debug("Creating user with email={}", dto.email());
+
         if (repository.existsByEmail(dto.email())) {
             throw new DuplicateEntityException(ErrorMessages.DUPLICATE_USER_EMAIL);
         }
@@ -32,6 +36,7 @@ public class UserService {
 
         User user = UserMapper.fromDto(dto, UserRole.APP_USER, encryptedPassword);
         repository.save(user);
+        log.info("User created successfully: email={}", dto.email());
     }
 
     @Transactional(readOnly = true)

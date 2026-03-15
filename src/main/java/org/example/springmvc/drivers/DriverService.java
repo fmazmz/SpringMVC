@@ -14,6 +14,7 @@ import org.example.springmvc.users.model.User;
 import org.example.springmvc.users.UserRepository;
 import org.example.springmvc.users.model.UserRole;
 import org.example.springmvc.utils.SearchUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 public class DriverService {
@@ -36,6 +38,8 @@ public class DriverService {
     }
 
     public Driver becomeDriver(UUID userId, CreateDriverDTO dto) {
+        log.debug("User becoming driver: userId={}", userId);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ErrorMessages.USER_NOT_FOUND_ID, userId)
@@ -58,6 +62,7 @@ public class DriverService {
         user.setRole(UserRole.DRIVER);
 
         securityUtils.refreshAuthentication(user.getEmail());
+        log.info("User became driver successfully: userId={}, driverId={}", userId, driver.getId());
         return driver;
     }
 
@@ -82,6 +87,8 @@ public class DriverService {
     }
 
     public void update(UUID driverId, UpdateDriverDTO dto) {
+        log.debug("Updating driver: driverId={}", driverId);
+
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ErrorMessages.DRIVER_NOT_FOUND_ID, driverId)
@@ -92,9 +99,12 @@ public class DriverService {
         }
 
         DriverMapper.updateEntity(driver, dto);
+        log.info("Driver updated successfully: driverId={}", driverId);
     }
 
     public void delete(UUID driverId) {
+        log.debug("Deleting driver: driverId={}", driverId);
+
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ErrorMessages.DRIVER_NOT_FOUND_ID, driverId)
@@ -107,10 +117,12 @@ public class DriverService {
         }
 
         driverRepository.delete(driver);
+        log.info("Driver deleted successfully: driverId={}", driverId);
     }
 
     @Transactional(readOnly = true)
     public Page<DriverDTO> search(Pageable pageable, DriverFilter filter) {
+        log.debug("Searching drivers with filter: q={}, fname={}, lname={}", filter.q(), filter.fname(), filter.lname());
         return driverRepository.searchDrivers(
                 SearchUtils.toWildcardPattern(filter.q()),
                 SearchUtils.toWildcardPattern(filter.fname()),

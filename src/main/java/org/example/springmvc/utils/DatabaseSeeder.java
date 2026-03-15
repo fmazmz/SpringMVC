@@ -12,6 +12,7 @@ import org.example.springmvc.users.UserRepository;
 import org.example.springmvc.users.UserService;
 import org.example.springmvc.users.dto.CreateUserDTO;
 import org.example.springmvc.users.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.util.List;
 
+@Slf4j
 @Component
 @Profile("!test")
 @Order(1)
@@ -42,7 +44,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        log.info("Starting database seeding...");
         seedTestDriverAndBooking();
+        log.info("Database seeding completed");
     }
 
     private void seedTestDriverAndBooking() {
@@ -72,7 +76,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         List<Car> cars = carRepository.findAll();
         if (cars.isEmpty()) {
-            System.out.println("No cars available for seeding booking");
+            log.warn("No cars available for seeding booking");
             return;
         }
 
@@ -91,9 +95,9 @@ public class DatabaseSeeder implements CommandLineRunner {
                         InsuranceType.BASIC
                 );
                 bookingService.create(createBookingDTO);
-                System.out.println("Seeded test driver with booking: " + testEmail);
+                log.info("Seeded test driver with booking: {}", testEmail);
             } catch (Exception e) {
-                System.out.println("Booking may already exist for test driver: " + e.getMessage());
+                log.warn("Booking may already exist for test driver: {}", e.getMessage());
             }
         }
     }

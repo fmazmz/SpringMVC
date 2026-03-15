@@ -16,6 +16,7 @@ import org.example.springmvc.insurances.InsuranceType;
 import org.example.springmvc.users.UserService;
 import org.example.springmvc.users.model.User;
 import org.example.springmvc.users.model.UserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("bookings")
 public class BookingController {
@@ -58,6 +60,7 @@ public class BookingController {
             @ModelAttribute BookingFilter filter,
             Model model
     ) {
+        log.debug("GET /bookings - page={}", pageable.getPageNumber());
         Page<BookingDTO> bookings = bookingService.search(pageable, filter);
 
         model.addAttribute("bookings", bookings);
@@ -72,6 +75,7 @@ public class BookingController {
             @PageableDefault(value = 5) Pageable pageable,
             Model model
     ) {
+        log.debug("GET /bookings/my-bookings");
         User user = userService.getCurrentUser();
         Driver driver = user.getDriver();
 
@@ -89,6 +93,7 @@ public class BookingController {
 
     @GetMapping("{id}")
     public String view(@PathVariable UUID id, Model model) {
+        log.debug("GET /bookings/{}", id);
 
         BookingDTO booking = bookingService.getById(id);
         User currentUser = userService.getCurrentUser();
@@ -159,6 +164,7 @@ public class BookingController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        log.debug("POST /bookings/new - carId={}", booking.carId());
 
         User user = userService.getCurrentUser();
         Driver driver = user.getDriver();
@@ -270,6 +276,7 @@ public class BookingController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        log.debug("POST /bookings/{}/update", id);
 
         BookingDTO originalBooking = bookingService.getById(id);
 
@@ -306,6 +313,7 @@ public class BookingController {
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {
+        log.debug("POST /bookings/{}/delete", id);
 
         try {
 
@@ -332,6 +340,7 @@ public class BookingController {
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {
+        log.debug("POST /bookings/my-bookings/{}/delete", id);
 
         try {
 

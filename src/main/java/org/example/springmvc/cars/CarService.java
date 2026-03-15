@@ -9,6 +9,7 @@ import org.example.springmvc.exceptions.DuplicateEntityException;
 import org.example.springmvc.exceptions.EntityNotFoundException;
 import org.example.springmvc.exceptions.ErrorMessages;
 import org.example.springmvc.utils.SearchUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class CarService {
 
@@ -27,6 +29,8 @@ public class CarService {
     }
 
     public CarDTO create(CreateCarDTO dto) {
+        log.debug("Creating car: make={}, model={}, plate={}", dto.make(), dto.model(), dto.licencePlate());
+
         String plate = dto.licencePlate().trim();
         String vin = dto.vin().trim();
 
@@ -45,10 +49,12 @@ public class CarService {
         Car car = CarMapper.fromDto(dto);
         Car savedCar = repository.save(car);
 
+        log.info("Car created successfully: id={}, plate={}", savedCar.getId(), plate);
         return CarMapper.toDto(savedCar);
     }
 
     public Page<CarDTO> search(Pageable pageable, CarFilter filter) {
+        log.debug("Searching cars with filter: q={}, make={}, model={}", filter.q(), filter.make(), filter.model());
         return repository.searchCars(
                 SearchUtils.toWildcardPattern(filter.q()),
                 SearchUtils.toWildcardPattern(filter.make()),
@@ -63,6 +69,7 @@ public class CarService {
     }
 
     public List<CarDTO> findAvailable(Instant startTime, Instant endTime) {
+        log.debug("Finding available cars from {} to {}", startTime, endTime);
         return repository.findAvailableCars(startTime, endTime)
                 .stream()
                 .map(CarMapper::toDto)
@@ -70,6 +77,7 @@ public class CarService {
     }
 
     public CarDTO getById(UUID id) {
+        log.debug("Fetching car by id={}", id);
         Car car = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ErrorMessages.CAR_NOT_FOUND_ID, id)
@@ -78,6 +86,7 @@ public class CarService {
     }
 
     public void update(UUID id, UpdateCarDTO dto) {
+        log.debug("Updating car: id={}", id);
         Car car = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ErrorMessages.CAR_NOT_FOUND_ID, id)
@@ -100,14 +109,17 @@ public class CarService {
 
         CarMapper.updateEntity(car, dto);
         repository.save(car);
+        log.info("Car updated successfully: id={}, plate={}", id, plate);
     }
 
     public void delete(UUID id) {
+        log.debug("Deleting car: id={}", id);
         Car car = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ErrorMessages.CAR_NOT_FOUND_ID, id)
                 ));
         repository.delete(car);
+        log.info("Car deleted successfully: id={}", id);
     }
 }
 
