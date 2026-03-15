@@ -1,0 +1,292 @@
+.data-table td {
+    transition: background-color 0.2s ease;
+}
+
+.data-table tr:hover td {
+    background: rgba(40, 40, 40, 0.95);
+}
+
+.data-table td:first-child {
+    background: rgba(0, 0, 0, 0.6);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    width: 140px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.4px;
+}
+
+.data-table td:first-child label {
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    display: block;
+}
+
+.form-input, .form-select {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: white;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 8px 10px;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.form-input:hover, .form-select:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 11px;
+    font-style: italic;
+}
+
+.form-input[readonly] {
+    background: rgba(255, 255, 255, 0.03);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.form-select option {
+    background: #1a1a1a;
+    color: white;
+}
+
+.field-error {
+    display: block;
+    color: #ffb3b3;
+    font-size: 10px;
+    margin-top: 4px;
+    background: rgba(255, 80, 80, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border-left: 2px solid rgba(255, 80, 80, 0.5);
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.button-group-flex {
+    display: flex;
+    gap: 6px;
+}
+
+.button-group-center {
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.btn {
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    min-width: 120px;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-min-width-140 {
+    min-width: 140px;
+}
+
+.table-card {
+    background: rgba(18, 18, 18, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 12px;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table-margin-bottom-0 {
+    margin-bottom: 0;
+}
+
+.message {
+    max-width: 540px;
+    margin: 15px auto;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.message.error {
+    background: rgba(255, 80, 80, 0.1);
+    border: 1px solid rgba(255, 80, 80, 0.2);
+    color: #ffb3b3;
+}
+
+.message.success {
+    background: rgba(80, 255, 80, 0.1);
+    border: 1px solid rgba(80, 255, 80, 0.2);
+    color: #b3ffb3;
+}
+
+.message.info {
+    background: rgba(255, 255, 255, 0.05);
+    max-width: 550px;
+    margin: 30px auto;
+}
+
+.message.info p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.page-header h2 {
+    color: white;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    margin: 0;
+}
+
+.input-hint {
+    display: block;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+}
+
+.available-cars-section {
+    margin-top: 30px;
+}
+
+.section-title {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.readonly-info {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 32px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+.table-container-max-width-550 {
+    max-width: 550px;
+}
+
+.table-container-max-width-600 {
+    max-width: 600px;
+}
+
+.table-container-max-width-650 {
+    max-width: 650px;
+}
+
+.form-width-100 {
+    width: 100%;
+    margin: 0;
+}
+
+.form-inline {
+    display: inline;
+}
+
+.price-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.price-input-symbol {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.price-input-field {
+    flex: 1;
+}
+
+.input-uppercase {
+    text-transform: uppercase;
+}
+
+.data-table-label-cell {
+    width: 140px;
+    background: rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+}
+
+.navbar {
+    position: relative;
+    z-index: 1000;
+}
+

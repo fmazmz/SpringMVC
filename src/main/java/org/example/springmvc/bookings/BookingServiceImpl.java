@@ -11,6 +11,7 @@ import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.exceptions.*;
 import org.example.springmvc.insurances.CarInsurance;
 import org.example.springmvc.insurances.InsuranceType;
+import org.example.springmvc.utils.SearchUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,27 +46,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Page<BookingDTO> search(Pageable pageable, BookingFilter filter) {
-        UUID carId = parseUuid(filter.carId());
-        UUID driverId = parseUuid(filter.driverId());
-        InsuranceType insuranceType = parseInsuranceType(filter.insuranceType());
-
-        if (filter.carId() != null && !filter.carId().isBlank() && carId == null) {
-            return Page.empty(pageable);
-        }
-
-        if (filter.driverId() != null && !filter.driverId().isBlank() && driverId == null) {
-            return Page.empty(pageable);
-        }
-
-        if (filter.insuranceType() != null && !filter.insuranceType().isBlank() && insuranceType == null) {
-            return Page.empty(pageable);
-        }
-
         return repository.searchBookings(
-                wildcard(filter.q()),
-                carId,
-                driverId,
-                insuranceType,
+                SearchUtils.toWildcardPattern(filter.q()),
+                filter.carId(),
+                filter.driverId(),
+                filter.insuranceType(),
                 pageable
         ).map(BookingMapper::toDto);
     }
@@ -156,37 +141,6 @@ public class BookingServiceImpl implements BookingService {
     public Page<BookingDTO> getDriverBookings(UUID driverId, Pageable pageable) {
         return repository.findByDriverId(driverId, pageable)
                 .map(BookingMapper::toDto);
-    }
-
-    private String wildcard(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-        return "%" + value.trim().toLowerCase() + "%";
-    }
-
-    private UUID parseUuid(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-
-        try {
-            return UUID.fromString(value.trim());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
-    private InsuranceType parseInsuranceType(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-
-        try {
-            return InsuranceType.valueOf(value.trim().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
     }
 
     private Booking findBookingById(UUID id) {

@@ -1,9 +1,12 @@
 package org.example.springmvc.bookings;
 
-public record BookingFilter(
+import org.example.springmvc.insurances.InsuranceType;
 
+import java.util.UUID;
+
+public record BookingFilter(
         String q,
-        String carId,
-        String driverId,
-        String insuranceType
+        UUID carId,
+        UUID driverId,
+        InsuranceType insuranceType
 ) {}

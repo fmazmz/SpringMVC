@@ -5,173 +5,7 @@
     <title>Update Car</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
-    <style>
-        .data-table td {
-            transition: background-color 0.2s ease;
-        }
-
-        .data-table tr:hover td {
-            background: rgba(40, 40, 40, 0.95);
-        }
-
-        .data-table td:first-child {
-            background: rgba(0, 0, 0, 0.6);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .form-input {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            color: white;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 12px;
-            padding: 8px 10px;
-            width: 100%;
-            transition: all 0.2s ease;
-        }
-
-        .form-input:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-
-        .form-input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
-        }
-
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 11px;
-            font-style: italic;
-        }
-
-        .field-error {
-            display: block;
-            color: #ffb3b3;
-            font-size: 10px;
-            margin-top: 4px;
-            background: rgba(255, 80, 80, 0.1);
-            padding: 3px 8px;
-            border-radius: 4px;
-            border-left: 2px solid rgba(255, 80, 80, 0.5);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin: 24px 0;
-        }
-
-        .btn {
-            padding: 8px 20px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            font-family: 'IBM Plex Mono', monospace;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            min-width: 120px;
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.4);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-primary {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .table-card {
-            background: rgba(18, 18, 18, 0.92);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            color: white;
-            font-family: 'IBM Plex Mono', monospace;
-        }
-
-        .data-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            font-size: 12px;
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table td:first-child {
-            width: 140px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.4px;
-        }
-
-        .data-table td:first-child label {
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-        }
-
-        .message {
-            max-width: 540px;
-            margin: 15px auto;
-            padding: 10px 16px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 12px;
-            backdrop-filter: blur(5px);
-        }
-
-        .message.success {
-            background: rgba(80, 255, 80, 0.1);
-            border: 1px solid rgba(80, 255, 80, 0.2);
-            color: #b3ffb3;
-        }
-
-        .message.error {
-            background: rgba(255, 80, 80, 0.1);
-            border: 1px solid rgba(255, 80, 80, 0.2);
-            color: #ffb3b3;
-        }
-
-        .page-header h2 {
-            color: white;
-            font-size: 26px;
-            font-weight: 500;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            margin: 0;
-        }
-    </style>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/form-tables.css}"/>
 </head>
 <body>
 
@@ -185,19 +19,19 @@
 </div>
 
 <div class="list-container">
-    <div class="table-container" style="max-width: 650px;">
+    <div class="table-container table-container-max-width-650">
         <div class="table-card">
             <form th:action="@{/cars/{id}/update(id=${carId})}"
                   th:object="${car}"
                   method="post"
                   id="updateForm"
-                  style="width: 100%; margin: 0;">
+                  class="form-width-100">
 
                 <input type="hidden"
                        th:name="${_csrf.parameterName}"
                        th:value="${_csrf.token}" />
 
-                <table class="data-table" style="margin-bottom: 0;">
+                <table class="data-table data-table-margin-bottom-0">
                     <tbody>
                     <tr>
                         <td>
@@ -232,15 +66,14 @@
                             <label for="hourlyPrice">Hourly Price</label>
                         </td>
                         <td>
-                            <div style="display: flex; align-items: center; gap: 4px;">
-                                <span style="color: rgba(255,255,255,0.5);">$</span>
+                            <div class="price-input-wrapper">
+                                <span class="price-input-symbol">$</span>
                                 <input type="number"
                                        step="0.01"
                                        id="hourlyPrice"
                                        th:field="*{hourlyPrice}"
                                        placeholder="25.00"
-                                       class="form-input"
-                                       style="flex: 1;">
+                                       class="form-input price-input-field">
                             </div>
                             <span class="field-error" th:if="${#fields.hasErrors('hourlyPrice')}" th:errors="*{hourlyPrice}"></span>
                         </td>
@@ -256,7 +89,7 @@
                                    th:field="*{licencePlate}"
                                    placeholder="ABC-123"
                                    class="form-input"
-                                   style="text-transform: uppercase;">
+                                   class="input-uppercase">
                             <span class="field-error" th:if="${#fields.hasErrors('licencePlate')}" th:errors="*{licencePlate}"></span>
                         </td>
                     </tr>
@@ -271,7 +104,7 @@
                                    th:field="*{vin}"
                                    placeholder="1HGCM82633A123456"
                                    class="form-input"
-                                   style="text-transform: uppercase;">
+                                   class="input-uppercase">
                             <span class="field-error" th:if="${#fields.hasErrors('vin')}" th:errors="*{vin}"></span>
                         </td>
                     </tr>

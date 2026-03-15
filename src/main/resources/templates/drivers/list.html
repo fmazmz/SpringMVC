@@ -1,10 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <title>Drivers</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/tables.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/list-pages.css}"/>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -43,7 +45,7 @@
 
                 <div class="filter-group">
                     <label for="driverId">Driver ID</label>
-                    <input type="text" id="driverId" name="driverId" th:value="${filter.driverId}" placeholder="UUID">
+                    <input type="text" id="driverId" name="driverId" th:value="${filter.driverId != null ? filter.driverId.toString() : ''}" placeholder="UUID">
                 </div>
 
                 <div class="filter-group">
@@ -154,27 +156,7 @@
     </div>
 </div>
 
-<script>
-    const filterForm = document.querySelector('.filter-form');
-    const textInputs = filterForm.querySelectorAll('input[type="text"]');
-    const selects = filterForm.querySelectorAll('select');
-    let timeout;
-
-    textInputs.forEach(input => {
-        input.addEventListener('input', () => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                filterForm.submit();
-            }, 500);
-        });
-    });
-
-    selects.forEach(select => {
-        select.addEventListener('change', () => {
-            filterForm.submit();
-        });
-    });
-</script>
+<script type="text/javascript" th:src="@{/js/filter-forms.js}"></script>
 
 </body>
 </html>

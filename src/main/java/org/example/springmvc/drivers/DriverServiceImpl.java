@@ -12,6 +12,7 @@ import org.example.springmvc.exceptions.UnauthorizedActionException;
 import org.example.springmvc.users.model.User;
 import org.example.springmvc.users.UserRepository;
 import org.example.springmvc.users.model.UserRole;
+import org.example.springmvc.utils.SearchUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -116,38 +117,13 @@ public class DriverServiceImpl implements DriverService {
     @Override
     @Transactional(readOnly = true)
     public Page<DriverDTO> search(Pageable pageable, DriverFilter filter) {
-        UUID driverId = parseDriverId(filter.driverId());
-
-        if (filter.driverId() != null && !filter.driverId().isBlank() && driverId == null) {
-            return Page.empty(pageable);
-        }
-
         return driverRepository.searchDrivers(
-                wildcard(filter.q()),
-                wildcard(filter.fname()),
-                wildcard(filter.lname()),
-                wildcard(filter.ssn()),
-                driverId,
+                SearchUtils.toWildcardPattern(filter.q()),
+                SearchUtils.toWildcardPattern(filter.fname()),
+                SearchUtils.toWildcardPattern(filter.lname()),
+                SearchUtils.toWildcardPattern(filter.ssn()),
+                filter.driverId(),
                 pageable
         ).map(DriverMapper::toDto);
-    }
-
-    private String wildcard(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-        return "%" + value.trim().toLowerCase() + "%";
-    }
-
-    private UUID parseDriverId(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-
-        try {
-            return UUID.fromString(value.trim());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
     }
 }

@@ -7,6 +7,7 @@ import org.example.springmvc.cars.model.Car;
 import org.example.springmvc.exceptions.DuplicateEntityException;
 import org.example.springmvc.exceptions.EntityNotFoundException;
 import org.example.springmvc.exceptions.ErrorMessages;
+import org.example.springmvc.utils.SearchUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -50,14 +51,14 @@ public class CarServiceImpl implements CarService {
     @Override
     public Page<CarDTO> search(Pageable pageable, CarFilter filter) {
         return repository.searchCars(
-                wildcard(filter.q()),
-                wildcard(filter.make()),
-                wildcard(filter.model()),
+                SearchUtils.toWildcardPattern(filter.q()),
+                SearchUtils.toWildcardPattern(filter.make()),
+                SearchUtils.toWildcardPattern(filter.model()),
                 filter.year(),
                 filter.minPrice(),
                 filter.maxPrice(),
-                wildcard(filter.licencePlate()),
-                wildcard(filter.vin()),
+                SearchUtils.toWildcardPattern(filter.licencePlate()),
+                SearchUtils.toWildcardPattern(filter.vin()),
                 pageable
         ).map(CarMapper::toDto);
     }
@@ -112,12 +113,5 @@ public class CarServiceImpl implements CarService {
                         String.format(ErrorMessages.CAR_NOT_FOUND_ID, id)
                 ));
         repository.delete(car);
-    }
-
-    private String wildcard(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-        return "%" + value.trim().toLowerCase() + "%";
     }
 }
