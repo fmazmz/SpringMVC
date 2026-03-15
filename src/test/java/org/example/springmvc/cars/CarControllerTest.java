@@ -1,6 +1,7 @@
 package org.example.springmvc.cars;
 
 import org.example.springmvc.cars.dto.CarDTO;
+import org.example.springmvc.cars.dto.CarFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;

@@ -1,4 +1,4 @@
-package org.example.springmvc.drivers;
+package org.example.springmvc.drivers.dto;
 
 import java.util.UUID;
 

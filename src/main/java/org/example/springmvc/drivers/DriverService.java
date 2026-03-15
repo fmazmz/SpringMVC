@@ -2,6 +2,7 @@ package org.example.springmvc.drivers;
 
 import org.example.springmvc.auth.SecurityUtils;
 import org.example.springmvc.drivers.dto.CreateDriverDTO;
+import org.example.springmvc.drivers.dto.DriverFilter;
 import org.example.springmvc.drivers.dto.UpdateDriverDTO;
 import org.example.springmvc.drivers.model.Driver;
 import org.example.springmvc.drivers.dto.DriverDTO;

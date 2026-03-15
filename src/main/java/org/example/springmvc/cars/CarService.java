@@ -1,6 +1,7 @@
 package org.example.springmvc.cars;
 
 import org.example.springmvc.cars.dto.CarDTO;
+import org.example.springmvc.cars.dto.CarFilter;
 import org.example.springmvc.cars.dto.CreateCarDTO;
 import org.example.springmvc.cars.dto.UpdateCarDTO;
 import org.example.springmvc.cars.model.Car;

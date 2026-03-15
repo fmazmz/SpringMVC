@@ -1,6 +1,7 @@
 package org.example.springmvc.drivers;
 
 import org.example.springmvc.drivers.dto.DriverDTO;
+import org.example.springmvc.drivers.dto.DriverFilter;
 import org.example.springmvc.users.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
