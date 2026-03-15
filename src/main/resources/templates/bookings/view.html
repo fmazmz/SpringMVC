@@ -56,7 +56,7 @@
                 </tr>
                 <tr>
                     <td>Total Price</td>
-                    <td class="price-value" th:text="${'$' + #numbers.formatDecimal(booking.totalPrice, 1, 2)}">
+                    <td class="price-value" th:text="${#numbers.formatDecimal(booking.totalPrice, 1, 2) + ' kr'}">
                         Price
                     </td>
                 </tr>

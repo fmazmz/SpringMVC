@@ -15,10 +15,7 @@ html, body {
 
 body {
     min-height: 100vh;
-    background-image: url('/images/CarBackground.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background: linear-gradient(145deg, #0f1117 0%, #1a1d2b 50%, #0f1117 100%);
     background-attachment: fixed;
     padding-top: 16px;
     color: white;

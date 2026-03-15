@@ -101,7 +101,7 @@
                     <td th:text="${#temporals.format(b.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, HH:mm')}">Start</td>
                     <td th:text="${#temporals.format(b.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'MMM dd, HH:mm')}">End</td>
                     <td th:text="${b.insuranceType}">Insurance</td>
-                    <td th:text="${'$' + #numbers.formatDecimal(b.totalPrice, 1, 2)}">Price</td>
+                    <td th:text="${#numbers.formatDecimal(b.totalPrice, 1, 2) + ' kr'}">Price</td>
                     <td>
                         <div class="button-group button-group-flex">
                             <a th:href="@{/bookings/{id}(id=${b.id})}" class="btn btn-sm">View</a>

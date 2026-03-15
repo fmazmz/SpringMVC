@@ -64,11 +64,11 @@
                     <tr>
                         <td>
                             <label for="hourlyPrice">Hourly Price</label>
-                            <span class="input-hint">USD</span>
+                            <span class="input-hint">SEK</span>
                         </td>
                         <td>
                             <div class="price-input-wrapper">
-                                <span class="price-input-symbol">$</span>
+                                <span class="price-input-symbol">kr</span>
                                 <input type="number"
                                        step="0.01"
                                        id="hourlyPrice"
@@ -90,8 +90,7 @@
                                    id="licencePlate"
                                    th:field="*{licencePlate}"
                                    placeholder="ABC123"
-                                   class="form-input"
-                                   class="input-uppercase">
+                                   class="form-input input-uppercase">
                             <span class="field-error" th:if="${#fields.hasErrors('licencePlate')}" th:errors="*{licencePlate}"></span>
                         </td>
                     </tr>
@@ -106,9 +105,8 @@
                                    id="vin"
                                    th:field="*{vin}"
                                    placeholder="YV1PSK5V3N1234508"
-                                   class="form-input"
-                                   maxlength="17"
-                                   class="input-uppercase">
+                                   class="form-input input-uppercase"
+                                   maxlength="17">
                             <span class="field-error" th:if="${#fields.hasErrors('vin')}" th:errors="*{vin}"></span>
                         </td>
                     </tr>

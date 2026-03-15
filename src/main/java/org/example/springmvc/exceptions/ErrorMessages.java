@@ -20,6 +20,7 @@ public class ErrorMessages {
 
     public static final String BOOKING_NOT_FOUND_ID = "Booking not found with id %s";
     public static final String INVALID_BOOKING_TIME = "Start time must be before end time";
+    public static final String BOOKING_START_IN_PAST = "Booking start time cannot be in the past";
     public static final String BOOKING_DUPLICATE = "Car already booked for that time";
     public static final String UNAUTHORIZED_BOOKING_ACTION = "You can only cancel your own bookings";
 }

@@ -165,6 +165,10 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void validateBookingTime(Instant startTime, Instant endTime) {
+        if (startTime.isBefore(Instant.now())) {
+            throw new InvalidBookingTimeException(ErrorMessages.BOOKING_START_IN_PAST);
+        }
+
         if (!startTime.isBefore(endTime)) {
             throw new InvalidBookingTimeException(ErrorMessages.INVALID_BOOKING_TIME);
         }

@@ -136,7 +136,9 @@ public class BookingController {
 
         if (startTime != null && endTime != null) {
 
-            if (!startTime.isBefore(endTime)) {
+            if (startTime.isBefore(Instant.now())) {
+                model.addAttribute("error", "Start time cannot be in the past");
+            } else if (!startTime.isBefore(endTime)) {
                 model.addAttribute("error", "Start time must be before end time");
             } else {
                 model.addAttribute(

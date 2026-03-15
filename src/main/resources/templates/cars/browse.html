@@ -91,7 +91,7 @@
                 <tr th:each="c : ${cars.content}">
                     <td th:text="${c.make}">Make</td>
                     <td th:text="${c.model}">Model</td>
-                    <td th:text="${c.hourlyPrice}">Price</td>
+                    <td th:text="${c.hourlyPrice + ' kr'}">Price</td>
                     <td th:text="${c.licencePlate}">Plate</td>
                     <td th:text="${c.vin}">VIN</td>
                     <td th:text="${c.year}">Year</td>

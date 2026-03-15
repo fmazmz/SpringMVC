@@ -58,6 +58,7 @@
                                    id="startTime"
                                    th:field="*{startTime}"
                                    th:value="${formattedStartTime}"
+                                   th:min="${#temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd''T''HH:mm')}"
                                    required
                                    class="form-input">
                             <span class="field-error" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></span>
@@ -73,6 +74,7 @@
                                    id="endTime"
                                    th:field="*{endTime}"
                                    th:value="${formattedEndTime}"
+                                   th:min="${#temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd''T''HH:mm')}"
                                    required
                                    class="form-input">
                             <span class="field-error" th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}"></span>

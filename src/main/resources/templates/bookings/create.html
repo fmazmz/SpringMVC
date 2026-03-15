@@ -32,6 +32,7 @@
                                    id="startTime"
                                    name="startTime"
                                    th:value="${booking.startTime != null ? #temporals.format(booking.startTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}"
+                                   th:min="${#temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd''T''HH:mm')}"
                                    class="form-input">
                             <span class="field-error" th:errors="*{startTime}"></span>
                         </td>
@@ -45,6 +46,7 @@
                                    id="endTime"
                                    name="endTime"
                                    th:value="${booking.endTime != null ? #temporals.format(booking.endTime.atZone(T(java.time.ZoneId).systemDefault()).toLocalDateTime(), 'yyyy-MM-dd''T''HH:mm') : ''}"
+                                   th:min="${#temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd''T''HH:mm')}"
                                    class="form-input">
                             <span class="field-error" th:errors="*{endTime}"></span>
                         </td>
@@ -91,7 +93,7 @@
                                     <option value="">-- Select a car --</option>
                                     <option th:each="car : ${cars}"
                                             th:value="${car.id}"
-                                            th:text="${car.make + ' ' + car.model + ' (' + car.licencePlate + ') - $' + car.hourlyPrice + '/hr'}">
+                                            th:text="${car.make + ' ' + car.model + ' (' + car.licencePlate + ') - ' + car.hourlyPrice + ' kr/hr'}">
                                     </option>
                                 </select>
                                 <span class="field-error" th:if="${#fields.hasErrors('carId')}" th:errors="*{carId}"></span>
