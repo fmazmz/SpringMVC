@@ -2,6 +2,7 @@ package org.example.springmvc.bookings;
 
 import jakarta.validation.Valid;
 import org.example.springmvc.bookings.dto.BookingDTO;
+import org.example.springmvc.bookings.dto.BookingFilter;
 import org.example.springmvc.bookings.dto.CreateBookingDTO;
 import org.example.springmvc.bookings.dto.UpdateBookingDTO;
 import org.example.springmvc.cars.CarService;

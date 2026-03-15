@@ -43,6 +43,7 @@ public class Car {
 
     @NotNull
     @PastOrPresent
+    @Column(name = "\"year\"")
     private Year year;
 
     @ManyToOne(fetch = FetchType.LAZY)
