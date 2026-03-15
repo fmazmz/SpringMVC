@@ -32,7 +32,7 @@ body.home-page {
 .home-background {
     position: fixed;
     inset: 0;
-    background-image: url('/images/FrontPic.png');
+    background-image: url('/images/CarBackground.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

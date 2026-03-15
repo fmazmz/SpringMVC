@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/global.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/tables.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/list-pages.css}"/>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
@@ -155,27 +156,7 @@
     </div>
 </div>
 
-<script>
-    const filterForm = document.querySelector('.filter-form');
-    const textInputs = filterForm.querySelectorAll('input[type="text"]');
-    const selects = filterForm.querySelectorAll('select');
-    let timeout;
-
-    textInputs.forEach(input => {
-        input.addEventListener('input', () => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                filterForm.submit();
-            }, 500);
-        });
-    });
-
-    selects.forEach(select => {
-        select.addEventListener('change', () => {
-            filterForm.submit();
-        });
-    });
-</script>
+<script type="text/javascript" th:src="@{/js/filter-forms.js}"></script>
 
 </body>
 </html>
